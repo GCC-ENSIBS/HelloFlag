@@ -108,3 +108,16 @@ team_to_game_level = Table(
         nullable=False,
     ),
 )
+
+# Association table for the many-to-many relationship between Box and Category
+box_to_category = Table(
+    "box_to_category",
+    DatabaseObject.metadata,
+    Column(
+        "box_id", Integer, ForeignKey("box.id", ondelete="CASCADE"), nullable=False
+    ),
+    Column(
+        "category_id", Integer, ForeignKey("category.id", ondelete="CASCADE"),
+        nullable=False,
+    ),
+)

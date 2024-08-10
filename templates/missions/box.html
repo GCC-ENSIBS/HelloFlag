@@ -161,7 +161,9 @@
             {% end %}
         </h1>
         <div style="margin-top: -5px; margin-bottom: -5px;">
-            {% if box.category %}{{ box.category }}{% end %}
+            {% if box.categories %}
+                {{ ", ".join(category._category for category in box.categories)}}
+            {% end %}
         </div><br />
         {% if errors is not None and len(errors) != 0 %}
             {% for error in errors %}

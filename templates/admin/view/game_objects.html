@@ -823,7 +823,10 @@
                                             {{ box.name }} Bot {{_("Garbage File") }}
                                         </a>
                                         {% end %}
-                                    <br />{% if box.category %}{{ box.category }}<br />{% end %}
+                                    <br />
+                                    {% if box.categories %}
+                                        {{ ", ".join(category._category for category in box.categories)}}
+                                    <br />{% end %}
                                     <br />
                                     <div>                   
                                         {% if box.avatar != "none" %}
