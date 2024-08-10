@@ -1,11 +1,29 @@
 /*!
  * The buffer module from node.js, for the browser.
  *
+ * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+ * @license  MIT
+ */
+
+/*!
+ * The buffer module from node.js, for the browser.
+ *
  * @author   Feross Aboukhadijeh <https://feross.org>
  * @license  MIT
  */
 
+/*! (c) Stefan Thomas | https://github.com/bitcoinjs/bitcoinjs-lib
+ */
+
+/*! (c) Tom Wu | http://www-cs-students.stanford.edu/~tjw/jsbn/
+ */
+
+/*! Mike Samuel (c) 2009 | code.google.com/p/json-sans-eval
+ */
+
 /*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
+
+/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
 
 /**
   Blowfish.js from Dojo Toolkit 1.8.1 (https://github.com/dojo/dojox/tree/1.8/encoding)
@@ -90,8 +108,52 @@
  */
 
 /**
+ * @author cplussharp
+ * @copyright Crown Copyright 2021
+ * @license Apache-2.0
+ */
+
+/**
  * @author d98762625 [d98762625@gmail.com]
  * @copyright Crown Copyright 2019
+ * @license Apache-2.0
+ */
+
+/**
+ * @author devcydo [devcydo@gmail.com]
+ * @author Ma Bingyao [mabingyao@gmail.com]
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2024
+ * @license Apache-2.0
+ */
+
+/**
+ * @author dolphinOnKeys [robin@weird.io]
+ * @copyright Crown Copyright 2022
+ * @license Apache-2.0
+ */
+
+/**
+ * @author joostrijneveld [joost@joostrijneveld.nl]
+ * @copyright Crown Copyright 2022
+ * @license Apache-2.0
+ */
+
+/**
+ * @author joostrijneveld [joost@joostrijneveld.nl]
+ * @copyright Crown Copyright 2024
+ * @license Apache-2.0
+ */
+
+/**
+ * @author mikecat
+ * @copyright Crown Copyright 2022
+ * @license Apache-2.0
+ */
+
+/**
+ * @author n1073645 [n1073645@gmail.com]
+ * @copyright Crown Copyright 2020
  * @license Apache-2.0
  */
 
@@ -105,6 +167,18 @@
 /**
  * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ */
+
+/**
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2023
+ * @license Apache-2.0
+ */
+
+/**
+ * @author swesven
+ * @copyright 2021
  * @license Apache-2.0
  */
 
@@ -117,14 +191,46 @@
  */
 
 /**
+ * Binary functions.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ */
+
+/**
  * Cipher functions.
  *
  * @author Matt C [matt@artemisbot.uk]
  * @author n1474335 [n1474335@gmail.com]
+ * @author Evie H [evie@evie.sh]
  *
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
  *
+ */
+
+/**
+ * Complete implementation of SM4 cipher encryption/decryption with
+ * ECB, CBC, CFB, OFB, CTR block modes.
+ * These modes are specified in IETF draft-ribose-cfrg-sm4-09, see:
+ * https://tools.ietf.org/id/draft-ribose-cfrg-sm4-09.html
+ * for details.
+ *
+ * Follows spec from Cryptography Standardization Technical Comittee:
+ * http://www.gmbz.org.cn/upload/2018-04-04/1522788048733065051.pdf
+ *
+ * @author swesven
+ * @copyright 2021
+ * @license Apache-2.0
+ */
+
+/**
+ * Crypt resources.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2021
+ * @license Apache-2.0
  */
 
 /**
@@ -148,10 +254,10 @@
 /**
  * CyberChef - The Cyber Swiss Army Knife
  *
- * @copyright Crown Copyright 2016
+ * @copyright Crown Copyright 2016-2024
  * @license Apache-2.0
  *
- *   Copyright 2016 Crown Copyright
+ *   Copyright 2016-2024 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -193,6 +299,14 @@
  */
 
 /**
+ * Hexadecimal functions.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ */
+
+/**
  * RSA resources.
  *
  * @author Matt C [me@mitt.dev]
@@ -216,6 +330,18 @@
  * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
+ */
+
+/**
+ * XXTEA library
+ *
+ * Encryption Algorithm Authors:
+ *     David J. Wheeler
+ *     Roger M. Needham
+ *
+ * @author Ma Bingyao [mabingyao@gmail.com]
+ * @author n1474335 [n1474335@gmail.com]
+ * @license MIT
  */
 
 /** @preserve

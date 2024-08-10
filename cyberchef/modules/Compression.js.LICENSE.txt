@@ -7,9 +7,29 @@
 
 /*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
 
+/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
+
+/**
+ * @author 0xThiebaut [thiebaut.dev]
+ * @copyright Crown Copyright 2023
+ * @license Apache-2.0
+ */
+
 /**
  * @author Matt C [me@mitt.dev]
  * @copyright Crown Copyright 2019
+ * @license Apache-2.0
+ */
+
+/**
+ * @author Matt C [me@mitt.dev]
+ * @copyright Crown Copyright 2022
+ * @license Apache-2.0
+ */
+
+/**
+ * @author crespyl [peter@crespyl.net]
+ * @copyright Peter Jacobs 2021
  * @license Apache-2.0
  */
 
@@ -29,6 +49,12 @@
 /**
  * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ */
+
+/**
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2022
  * @license Apache-2.0
  */
 
@@ -67,10 +93,10 @@
 /**
  * CyberChef - The Cyber Swiss Army Knife
  *
- * @copyright Crown Copyright 2016
+ * @copyright Crown Copyright 2016-2024
  * @license Apache-2.0
  *
- *   Copyright 2016 Crown Copyright
+ *   Copyright 2016-2024 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -106,6 +132,16 @@
  * File type functions
  *
  * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ *
+ */
+
+/**
+ * Stream class for parsing binary protocols.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @author tlwr [toby@toby.codes]
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
  *
