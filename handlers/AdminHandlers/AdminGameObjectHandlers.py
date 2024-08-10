@@ -216,11 +216,17 @@ class AdminCreateHandler(BaseHandler):
                 box.operating_system = self.get_argument("operating_system", "?")
                 box.capture_message = self.get_argument("capture_message", "")
                 box.value = self.get_argument("reward", 0)
-                cat = Category.by_uuid(self.get_argument("category_uuid", ""))
-                if cat is not None:
-                    box.category_id = cat.id
+                category_uuids = self.get_arguments("category_uuid")
+                if category_uuids:
+                    for cat_uuid in category_uuids:
+                        cat = Category.by_uuid(cat_uuid)
+                        logging.info(f"{cat_uuid} / {cat}")
+                        if cat is not None:
+                            box.categories.append(cat)
+                    else:
+                        box.categories = []
                 else:
-                    box.category_id = None
+                    box.categories = []
                 # Avatar
                 avatar_select = self.get_argument("box_avatar_select", "")
                 if avatar_select and len(avatar_select) > 0:
@@ -650,19 +656,17 @@ class AdminEditHandler(BaseHandler):
                 box.corporation_id = corp.id
             elif corp is None:
                 raise ValidationError("Corporation does not exist")
-            # Category
-            cat = Category.by_uuid(self.get_argument("category_uuid", ""))
-            if cat is not None and cat.id != box.category_id:
-                logging.info(
-                    "Updated %s's category %s -> %s"
-                    % (box.name, box.category_id, cat.id)
-                )
-                box.category_id = cat.id
-            elif cat is None and cat != box.category_id:
-                logging.info(
-                    "Updated %s's category %s -> None" % (box.name, box.category_id)
-                )
-                box.category_id = None
+            # Handle multiple categories
+            new_category_uuids = self.get_arguments("category_uuid")
+            current_category_ids = {cat.id for cat in box.categories}
+            for cat_uuid in new_category_uuids:
+                cat = Category.by_uuid(cat_uuid)
+                if cat is not None:
+                    if cat.id not in current_category_ids:
+                        logging.info(
+                            "Added category %s to box %s" % (cat.id, box.name)
+                        )
+                        box.categories.append(cat)
             # System Type
             ostype = self.get_argument("operating_system", "")
             if ostype is not None and ostype != box.operating_system:

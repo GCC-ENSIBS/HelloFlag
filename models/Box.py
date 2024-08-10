@@ -46,7 +46,7 @@ from models.Category import Category
 from models.Corporation import Corporation
 from models.GameLevel import GameLevel
 from models.IpAddress import IpAddress
-from models.Relationships import team_to_box
+from models.Relationships import team_to_box, box_to_category
 from models.SourceCode import SourceCode
 
 
@@ -67,7 +67,7 @@ class Box(DatabaseObject):
 
     corporation_id = Column(Integer, ForeignKey("corporation.id"), nullable=False)
 
-    category_id = Column(Integer, ForeignKey("category.id"), nullable=True)
+    #category_id = Column(Integer, ForeignKey("category.id"), nullable=True)
 
     _name = Column(Unicode(32), unique=True, nullable=False)
     _operating_system = Column(Unicode(16))
@@ -90,6 +90,14 @@ class Box(DatabaseObject):
     teams = relationship(
         "Team", secondary=team_to_box, back_populates="boxes", lazy="select"
     )
+
+    categories = relationship(
+        "Category",
+        secondary=box_to_category,
+        back_populates="boxes",
+        lazy="select"
+    )
+
 
     hints = relationship(
         "Hint",
@@ -141,8 +149,8 @@ class Box(DatabaseObject):
 
     @classmethod
     def by_category(cls, _cat_id):
-        """Return the box object whose category is "_cat_id" """
-        return dbsession.query(cls).filter_by(category_id=int(_cat_id)).all()
+        """Return the list of box objects associated with the category ID `_cat_id`"""
+        return dbsession.query(cls).join(cls.categories).filter(Category.id == int(_cat_id)).all()
 
     @classmethod
     def by_garbage(cls, _garbage):
@@ -176,7 +184,8 @@ class Box(DatabaseObject):
 
     @property
     def category(self):
-        return Category.by_id(self.category_id)
+        """Return the list of category names associated with the box"""
+        return [category._category for category in self.categories]
 
     @property
     def flags(self):
@@ -411,10 +420,10 @@ class Box(DatabaseObject):
         ET.SubElement(box_elem, "locked").text = str(
             False if self._locked is None else self._locked
         )
-        if self.category_id:
-            ET.SubElement(box_elem, "category").text = Category.by_id(
-                self.category_id
-            ).category
+        if self.categories:
+            categories_elem = ET.SubElement(box_elem, "categories")
+            for category in self.categories:
+                ET.SubElement(categories_elem, "category").text = category._category
         flags_elem = ET.SubElement(box_elem, "flags")
         flags_elem.set("count", "%s" % str(len(self.flags)))
         for flag in self.flags_all:
@@ -442,16 +451,12 @@ class Box(DatabaseObject):
 
     def to_dict(self):
         """Returns editable data as a dictionary"""
-        cat = self.category
-        if cat:
-            category = cat.uuid
-        else:
-            category = ""
+        categories = [category.uuid for category in self.categories] if self.categories else []
         return {
             "name": self.name,
             "uuid": self.uuid,
             "corporation": self.corporation.uuid,
-            "category": category,
+            "category": categories,
             "operating_system": self.operating_system,
             "description": self._description,
             "capture_message": self.capture_message,
