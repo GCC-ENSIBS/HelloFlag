@@ -255,9 +255,16 @@ def create_boxes(parent, corporation):
                 box.garbage = get_child_text(
                     box_elem, "garbage", binascii.hexlify(urandom(16)).decode()
                 )
-                category = get_child_text(box_elem, "category")
-                if category:
-                    box.category_id = Category.by_category(category).id
+                # Handle multiple categories
+                categories_elem = box_elem.find("categories")
+                if categories_elem is not None:
+                    for category_elem in categories_elem.findall("category"):
+                        category = category_elem.text.strip()
+                        cat = Category.by_category(category).id
+                        if cat:
+                            box.categories.append(cat)
+                        else:
+                            logging.warning("Category %s does not exist, skipping" % category)
                 dbsession.add(box)
                 dbsession.flush()
                 create_flags(get_child_by_tag(box_elem, "flags"), box)

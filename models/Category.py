@@ -32,7 +32,7 @@ from sqlalchemy.types import String, Unicode
 from libs.ValidationError import ValidationError
 from models import dbsession
 from models.BaseModels import DatabaseObject
-
+from models.Relationships import box_to_category
 
 class Category(DatabaseObject):
     """Category definition"""
@@ -42,7 +42,13 @@ class Category(DatabaseObject):
     _category = Column(Unicode(64), unique=True, nullable=False)
     _description = Column(Unicode(4096), nullable=True)
 
-    boxes = relationship("Box", backref=backref("category", lazy="select"))
+    #boxes = relationship("Box", backref=backref("category", lazy="select"))
+    boxes = relationship(
+        "Box",
+        secondary=box_to_category,
+        back_populates="categories",
+        lazy="select"
+    )
 
     @classmethod
     def all(cls):
