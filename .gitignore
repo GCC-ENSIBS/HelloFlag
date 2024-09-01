@@ -21,6 +21,7 @@ files/*.db
 files/*.cfg
 files/save_user.txt
 files/user/*
+files/boxes.csv
 
 #Alembic
 alembic/alembic.ini
