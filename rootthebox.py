@@ -175,6 +175,40 @@ def generate_teams_by_name(team_names):
     dbsession.commit()
 
 
+def generate_teams_user_with_file(file_name):
+    from models import Team, dbsession
+    from models import User
+    import csv
+    import string
+    import random
+
+    def generate_password(length=12):
+        characters = string.ascii_letters + string.digits + string.punctuation
+        password = ''.join(random.choice(characters) for _ in range(length))
+        return password
+
+    with open(file_name[0], 'r') as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            team_name = row[0]
+            team = Team.by_name(team_name)
+            if not team:
+                team = Team(name=team_name)
+                dbsession.add(team)
+                dbsession.commit()
+
+            for user_pseudo in row[1:]:
+                user = User.by_handle(user_pseudo)
+                if not user:
+                    pwd = generate_password(12)
+                    user = User(handle=user_pseudo, team=team, password=pwd)
+                    dbsession.add(user)
+                    dbsession.commit()
+
+                    with open("/opt/rtb/files/save_user.txt", "a") as f:
+                        f.write(str((team_name, user_pseudo, pwd)) + "\n")
+
+
 def generate_admins(admin_names):
     """Creates admin users with the syntax '<handle> <email> <password>'"""
     from models import Permission, User, dbsession
@@ -1100,6 +1134,14 @@ define(
 )
 
 define(
+    "generate_team_file",
+    default=[],
+    group="autosetup",
+    help="generate teams and user from a file",
+    multiple=True,
+)
+
+define(
     "add_admin",
     default=[],
     group="autosetup",
@@ -1213,6 +1255,8 @@ if __name__ == "__main__":
         generate_teams(options.generate_teams)
     if options.generate_team:
         generate_teams_by_name(options.generate_team)
+    if options.generate_team_file:
+        generate_teams_user_with_file(options.generate_team_file)
     if options.add_admin:
         generate_admins(options.add_admin)
 

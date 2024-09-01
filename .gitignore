@@ -19,6 +19,8 @@ files/game_materials/*
 files/flag_attachments/*
 files/*.db
 files/*.cfg
+files/save_user.txt
+files/user/*
 
 #Alembic
 alembic/alembic.ini
