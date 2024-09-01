@@ -209,6 +209,39 @@ def generate_teams_user_with_file(file_name):
                         f.write(str((team_name, user_pseudo, pwd)) + "\n")
 
 
+def generate_boxes_flag(file_path):
+    """Creates boxes and flag from a csv file"""
+
+    from models import Box, Flag
+    from models import dbsession
+    import csv
+
+    with open(file_path[0], 'r') as csvfile:
+        reader = csv.reader(csvfile)
+
+        idx_box = 0
+        boxes = []
+        for row in reader:
+            name, description, points = row[0], row[1], int(row[2])
+            flag_name, flag_str, flag_points = row[3], row[4], int(row[5])
+            if name not in boxes:
+                print("Box added")
+                box = Box(name=name, operating_system="linux", description=description,
+                          game_level_id=1, value=points, corporation_id=1,
+                          flag_submission_type="SINGLE_SUBMISSION_BOX")
+
+                dbsession.add(box)
+                dbsession.commit()
+
+                boxes.append(name)
+                idx_box += 1
+
+            print("Flag added")
+            flag = Flag(box_id=idx_box, name=flag_name, token=flag_str, value=flag_points, type="static")
+            dbsession.add(flag)
+            dbsession.commit()
+
+
 def generate_admins(admin_names):
     """Creates admin users with the syntax '<handle> <email> <password>'"""
     from models import Permission, User, dbsession
@@ -1142,6 +1175,14 @@ define(
 )
 
 define(
+    "generate_boxes_flag",
+    default=[],
+    group="autosetup",
+    help="generate boxes and flags from a file",
+    multiple=True,
+)
+
+define(
     "add_admin",
     default=[],
     group="autosetup",
@@ -1259,6 +1300,8 @@ if __name__ == "__main__":
         generate_teams_user_with_file(options.generate_team_file)
     if options.add_admin:
         generate_admins(options.add_admin)
+    if options.generate_boxes_flag:
+        generate_boxes_flag(options.generate_boxes_flag)
 
     if options.admin_ips == ["[]"]:
         options.admin_ips = []  # Tornado issue?
