@@ -49,7 +49,7 @@ from libs.XSSImageCheck import (
     avatar_validation,
     save_avatar,
     default_avatar,
-    get_new_avatar,    
+    get_new_avatar,
 )
 from models import dbsession
 from models.BaseModels import DatabaseObject
@@ -76,7 +76,7 @@ class User(DatabaseObject):
     _locked = Column(Boolean, default=False, nullable=False)
     last_login = Column(DateTime)
     logins = Column(Integer, default=0)
-    _handle = Column(Unicode(16), unique=True, nullable=False)
+    _handle = Column(Unicode(48), unique=True, nullable=False)
     _name = Column(Unicode(64), unique=False, nullable=True)
     _email = Column(Unicode(64), unique=False, nullable=True)
     _password = Column("password", String(64))
@@ -244,8 +244,8 @@ class User(DatabaseObject):
     @handle.setter
     def handle(self, new_handle):
         new_handle = str(new_handle).strip()
-        if not 3 <= len(new_handle) <= 16:
-            raise ValidationError("Handle must be 3 - 16 characters")
+        if not 3 <= len(new_handle) <= 48:
+            raise ValidationError("Handle must be 3 - 48 characters")
         self._handle = new_handle
 
     @property
@@ -349,7 +349,7 @@ class User(DatabaseObject):
     @avatar.setter
     def avatar(self, image_data):
         ext = avatar_validation(image_data)
-        self._avatar = save_avatar(os.path.join("upload", f"{self.uuid}.{ext}"),image_data)                
+        self._avatar = save_avatar(os.path.join("upload", f"{self.uuid}.{ext}"),image_data)
 
     def has_item(self, item_name):
         """Check to see if a team has purchased an item"""
