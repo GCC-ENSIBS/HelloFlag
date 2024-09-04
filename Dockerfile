@@ -18,4 +18,4 @@ RUN mkdir /opt/rtb
 ADD . /opt/rtb
 
 VOLUME ["/opt/rtb/files"]
-ENTRYPOINT ["python3", "/opt/rtb/rootthebox.py", "--setup=docker", "--generate_team_file=/opt/rtb/files/user/test_equipe.csv", "--generate_boxes_flag=/opt/rtb/files/boxes.csv"]
+ENTRYPOINT ["python3", "/opt/rtb/rootthebox.py", "--setup=docker", "--generate_team_file=/opt/rtb/files/user/test_equipe.csv", "--generate_boxes_flag=/opt/rtb/files/boxes.csv", "--dynamic_flag_value=True", "--dynamic_flag_type=decay_all", "--flag_value_decrease=6", "--flag_value_minimum=100"]

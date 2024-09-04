@@ -37,7 +37,7 @@ from libs.BotManager import BotManager
 from libs.StringCoding import encode
 from libs.ValidationError import ValidationError
 from libs.XSSImageCheck import (
-    get_new_avatar, 
+    get_new_avatar,
     avatar_validation,
     save_avatar,
 )
@@ -60,7 +60,7 @@ class Team(DatabaseObject):
     """Team definition"""
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
-    _name = Column(Unicode(24), unique=True, nullable=False)
+    _name = Column(Unicode(48), unique=True, nullable=False)
     _motto = Column(Unicode(32))
     _avatar = Column(String(64))
     _notes = Column(Unicode(512))
@@ -204,8 +204,8 @@ class Team(DatabaseObject):
 
     @name.setter
     def name(self, value):
-        if not 3 <= len(value) <= 24:
-            raise ValidationError("Team name must be 3 - 24 characters")
+        if not 3 <= len(value) <= 48:
+            raise ValidationError("Team name must be 3 - 48 characters")
         else:
             self._name = str(value)
 
@@ -263,7 +263,7 @@ class Team(DatabaseObject):
     @avatar.setter
     def avatar(self, image_data):
         ext = avatar_validation(image_data)
-        self._avatar = save_avatar(os.path.join("upload", f"{self.uuid}.{ext}"),image_data)                
+        self._avatar = save_avatar(os.path.join("upload", f"{self.uuid}.{ext}"),image_data)
 
     @property
     def levels(self):

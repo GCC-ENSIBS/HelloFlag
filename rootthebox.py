@@ -189,6 +189,7 @@ def generate_teams_user_with_file(file_name):
 
     with open(file_name[0], 'r') as csvfile:
         reader = csv.reader(csvfile)
+        i = 0
         for row in reader:
             team_name = row[0]
             team = Team.by_name(team_name)
@@ -205,8 +206,13 @@ def generate_teams_user_with_file(file_name):
                     dbsession.add(user)
                     dbsession.commit()
 
-                    with open("/opt/rtb/files/save_user.txt", "a") as f:
-                        f.write(str((team_name, user_pseudo, pwd)) + "\n")
+                    if i == 0:
+                        with open("/opt/rtb/files/save_user.txt", "w") as f:
+                            f.write(str((team_name, user_pseudo, pwd)) + "\n")
+                        i = 1
+                    else:
+                        with open("/opt/rtb/files/save_user.txt", "a") as f:
+                            f.write(str((team_name, user_pseudo, pwd)) + "\n")
 
 
 def generate_boxes_flag(file_path):
@@ -224,22 +230,29 @@ def generate_boxes_flag(file_path):
         for row in reader:
             name, description, points = row[0], row[1], int(row[2])
             flag_name, flag_str, flag_points = row[3], row[4], int(row[5])
+
             if name not in boxes:
                 print("Box added")
-                box = Box(name=name, operating_system="linux", description=description,
-                          game_level_id=1, value=points, corporation_id=1,
-                          flag_submission_type="SINGLE_SUBMISSION_BOX")
 
-                dbsession.add(box)
+                existing_box = dbsession.query(Box).filter_by(_name=name).first()
+                print(existing_box)
+                if not existing_box:
+                    box = Box(name=name, operating_system="linux", description=description,
+                              game_level_id=1, value=points, corporation_id=1,
+                              flag_submission_type="SINGLE_SUBMISSION_BOX")
+
+                    dbsession.add(box)
+                    dbsession.commit()
+
+                    boxes.append(name)
+                    idx_box += 1
+
+            existing_flag = dbsession.query(Flag).filter_by(name=flag_name).first()
+            if not existing_flag:
+                print("Flag added")
+                flag = Flag(box_id=idx_box, name=flag_name, token=flag_str, value=flag_points, type="static")
+                dbsession.add(flag)
                 dbsession.commit()
-
-                boxes.append(name)
-                idx_box += 1
-
-            print("Flag added")
-            flag = Flag(box_id=idx_box, name=flag_name, token=flag_str, value=flag_points, type="static")
-            dbsession.add(flag)
-            dbsession.commit()
 
 
 def generate_admins(admin_names):

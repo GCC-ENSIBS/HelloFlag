@@ -25,7 +25,7 @@
         <div class="row">
             <div class="span11 offset1 well">
                 <h2 style="padding-bottom: 8px;">
-                    <i class="fa fa-user"></i> {{ user.handle }} 
+                    <i class="fa fa-user"></i> {{ user.handle }}
                 </h2>
                 <span style="float: right; margin-top: -63px; text-align: center;">
                     <table>
@@ -85,7 +85,7 @@
                     <strong>{{ _("You are not on a team") }}</strong>
                 {% end %}
             </div>
-            
+
         </div>
         {% if len(Category.all()) > 2 %}
             <div class="row">
@@ -111,7 +111,7 @@
                     </center>
                 </div>
             </div>
-            {% end %} 
+            {% end %}
 
         {% if not visitor %}
 		{% from models.MarketItem import MarketItem %}
@@ -127,8 +127,8 @@
                         <i class="fa fa-sitemap" style="font-size: 180%;"></i>
                     </div>
                     <div class="span7 msgdescription">
-                            {{ _("Welcome to the computer war game where security professionals can practice and learn.") }}  
-                            {{ _("Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!") }}
+                            {{ _("Welcome to the Hello World! CTF platform 🥳") }}
+                            {{ _("Each team will target boxes of varying difficulty and sophistication, attempting to collect flags and win glory.  The 5 first teams at the end of the 3 rounds will compete in the epic finale. Good luck!") }}
                     </div>
                 </div>
                 <br/>
@@ -143,16 +143,6 @@
                 </div>
 				<br/>
 				{% end %}
-                <div class="row">
-                    <div class="span1 offset1" style="text-align: center; padding-top: 5px;">
-                        <i class="fa fa-crosshairs" style="font-size: 180%;"></i>
-                    </div>
-                    <div class="span7 msgdescription">
-                            {{ _("Rules of Engagement: Do not attack the game scoreboard platform.  Do not change the passwords of existing accounts in the network unless specified by a game objective.") }}
-                            {{ _("Do not delete or modify community flags unless instructed. Do not attack other players unless outlined in the game goals.") }}
-                    </div>
-                </div>
-                <br/>
                 {% if options.dynamic_flag_value %}
                 <div class="row">
                     <div class="span1 offset1" style="text-align: center; padding-top: 5px;">
@@ -174,8 +164,8 @@
                         <i class="fa fa-minus-circle" style="font-size: 180%;"></i>
                     </div>
                     <div class="span7 msgdescription">
-                        {{ _("Failure has a cost. Be careful as penalties are applied when incorrect answers are submitted.") }}  
-                        {{ _("The deduction is") }} {{ options.flag_penalty_cost }}% {{ _("of the flag's value. It will start on the") }} {% set n = options.flag_start_penalty %}{{str(n)+("th" if 4<=n%100<=20 else {1:"st",2:"nd",3:"rd"}.get(n%10, "th"))}} 
+                        {{ _("Failure has a cost. Be careful as penalties are applied when incorrect answers are submitted.") }}
+                        {{ _("The deduction is") }} {{ options.flag_penalty_cost }}% {{ _("of the flag's value. It will start on the") }} {% set n = options.flag_start_penalty %}{{str(n)+("th" if 4<=n%100<=20 else {1:"st",2:"nd",3:"rd"}.get(n%10, "th"))}}
                         {{ _("attempt and continue until the") }} {% set n = options.flag_stop_penalty - 1 %}{{str(n)+("th" if 4<=n%100<=20 else {1:"st",2:"nd",3:"rd"}.get(n%10, "th"))}}. {{ _("No further penalty thereafter.") }}
                         <!-- Max loss is {{ (options.flag_stop_penalty - options.flag_start_penalty) * options.flag_penalty_cost }}% of the flag's value. -->
                     </div>
@@ -240,7 +230,7 @@
             <i class="fa fa-group"></i>
             {{ _("Team Information") }}
         </h2>
-        <hr>      
+        <hr>
         <div class="row">
             <div class="span1 offset1" style="text-align: center; padding-top: 5px;">
                 <i class="fa fa-key" style="font-size: 180%;"></i>
@@ -254,7 +244,7 @@
 
     <div class="span5 well" style="width: 46%;">
         <h2>
-            <i class="fa fa-flag"></i> 
+            <i class="fa fa-flag"></i>
             {% if options.teams %}{{ _("Team") }} {% end %}{{ _("Mission Progress") }}
         </h2>
         <hr style="margin-bottom: 8px;">
@@ -300,15 +290,15 @@
                                         </h5>
                                     </a>
                                 </div>
-                                {% set flagcount=0 %} 
-                                {% for index, flag in enumerate(sorted(box.flags)) %} 
-                                    {% if flag in team.flags %} 
+                                {% set flagcount=0 %}
+                                {% for index, flag in enumerate(sorted(box.flags)) %}
+                                    {% if flag in team.flags %}
                                         {% set flagcount += 1 %}
-                                    {% end %} 
+                                    {% end %}
                                 {% end %}
                                 <div class="span8" style="padding-top: 6px;">
                                     <table style="width: 100%; margin: 0 3px;"><tr>
-                                    {% for index, flag in enumerate(sorted(box.flags)) %} 
+                                    {% for index, flag in enumerate(sorted(box.flags)) %}
                                         <td style="padding: 0 3px;">
                                             <div class="progress" style="height: 8px; background-color: #424242;" title="{{ flag.name }}">
                                                 <div class="bar minibar" style="width: {% if flag in team.flags %}100{% else %}0{% end %}%;"></div>
@@ -338,10 +328,10 @@
         {% end %}
     </div>
         {% if options.teams %}
-        
+
         <div class="span5 well" style="width: 46%;">
             <h2>
-                <i class="fa fa-flag"></i> 
+                <i class="fa fa-flag"></i>
                 {{ _("Player") }} {{ _("Mission Progress") }}
             </h2>
             <hr style="margin-bottom: 8px;">
@@ -387,15 +377,15 @@
                                             </h5>
                                         </a>
                                     </div>
-                                    {% set flagcount=0 %} 
-                                    {% for index, flag in enumerate(sorted(box.flags)) %} 
-                                        {% if flag in user.flags %} 
+                                    {% set flagcount=0 %}
+                                    {% for index, flag in enumerate(sorted(box.flags)) %}
+                                        {% if flag in user.flags %}
                                             {% set flagcount += 1 %}
-                                        {% end %} 
+                                        {% end %}
                                     {% end %}
                                     <div class="span8" style="padding-top: 6px;">
                                         <table style="width: 100%; margin: 0 3px;"><tr>
-                                        {% for index, flag in enumerate(sorted(box.flags)) %} 
+                                        {% for index, flag in enumerate(sorted(box.flags)) %}
                                             <td style="padding: 0 3px;">
                                                 <div class="progress" style="height: 8px; background-color: #424242;" title="{{ flag.name }}">
                                                     <div class="bar minibar" style="width: {% if flag in user.flags %}100{% else %}0{% end %}%;"></div>
@@ -425,9 +415,9 @@
             {% end %}
         </div>
 
-        {% end %} 
+        {% end %}
 
 
-    
+
 </div>
 {% end %}
