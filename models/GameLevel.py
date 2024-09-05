@@ -196,9 +196,10 @@ class GameLevel(DatabaseObject):
         self._locked = value
 
     def unlocked_boxes(self):
-        if self._locked:
-            return []
-        return [box for box in self.boxes if not box.locked]
+        # if self._locked:
+        #    return []
+        # return [box for box in self.boxes if not box.locked]
+        return self.boxes
 
     def to_xml(self, parent):
         level_elem = ET.SubElement(parent, "gamelevel")

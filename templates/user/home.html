@@ -30,10 +30,10 @@
                 <span style="float: right; margin-top: -63px; text-align: center;">
                     <table>
                         <tr>
-                            {% if options.teams %}<td>{{ _("Player Score") }}</td>{% end %}{% if scoreboard_visible %}<td style="padding-left: 20px;">Rank</td>{% end %}
+                            {% if options.teams %}<td>{{ _("Team Score") }}</td>{% end %}{% if scoreboard_visible %}<td style="padding-left: 20px;">Rank</td>{% end %}
                         </tr>
                         <tr>
-                            {% if options.teams %}<td><h4 style="margin-top: 0;">{% if options.banking %}${% end %}{{ user.money }} &bull; {{ len(user.flags) }} <i class="fa fa-flag-o"></i><h4></td>{% end %}{% if scoreboard_visible %}<td style="padding-left: 20px;"><h4 style="margin-top: 0;">{{ rank }}<h4></td>{% end %}
+                            {% if options.teams %}<td><h4 style="margin-top: 0;">{% if options.banking %}${% end %}{{ team.money }} &bull; {{ len(team.flags) }} <i class="fa fa-flag-o"></i><h4></td>{% end %}{% if scoreboard_visible %}<td style="padding-left: 20px;"><h4 style="margin-top: 0;">{{ rank }}<h4></td>{% end %}
                         </tr>
                     </table>
                 </span>
@@ -231,16 +231,23 @@
             {{ _("Team Information") }}
         </h2>
         <hr>
+        <h4>{{ _("Team Members") }}</h4>
         <div class="row">
-            <div class="span1 offset1" style="text-align: center; padding-top: 5px;">
-                <i class="fa fa-key" style="font-size: 180%;"></i>
-            </div>
-            <div class="span7 msgdescription">
-                    {{ team.code }}<br>{{ _("Share your team code to allow other players to join") }} {{ team.name }}.
+            <div class="container">
+                {% for member in team.members %}
+                    <div class="span2" align="middle">
+                        <a href="/user?id={{member.uuid}}">
+                            <h5>{{ member._handle }}</h5>
+                        </a>
+                        <img src="/avatars/{{ member.avatar }}" class="img-polaroid" align="middle" />
+                        <h5>{{ member.money }}</h5>
+                    </div>
+                {% end %}
             </div>
         </div>
     </div>
     {% end %}
+
 
     <div class="span5 well" style="width: 46%;">
         <h2>
@@ -248,7 +255,7 @@
             {% if options.teams %}{{ _("Team") }} {% end %}{{ _("Mission Progress") }}
         </h2>
         <hr style="margin-bottom: 8px;">
-        {% if game_started %}
+        {% if game_started or not game_started %}
             {% for index, level in enumerate(GameLevel.all()) %}
                 {% set show_level = level.type != "hidden" or (level.type == "hidden" and level in team.game_levels) %}
                 {% if len(level.unlocked_boxes()) > 0 and team and show_level %}
@@ -271,7 +278,7 @@
                     {% if level.type == 'none' or level in team.game_levels %}
                         <hr style="margin: 5px 0;">
                         {% for box in sorted(level.unlocked_boxes()) %}
-                            {% if not box.locked and len(box.flags) > 0 %}
+                            {% if len(box.flags) > 0 %}
                             <div class="row" style="margin-left: 16px;">
                                 <div class="span4">
                                     <a href="/user/missions/boxes?uuid={{ box.uuid }}">
@@ -287,6 +294,11 @@
                                             {% else %}
                                             <i class="fa fa-th"></i>
                                             {% end %} {{ box.corporation.name }} - {{ box.name }}
+                                            {% if box._locked %}
+                                                <i class="fa fa-lock"></i>
+                                            {% else %}
+                                                <i class="fa fa-unlock-alt"></i>
+                                            {% end %}
                                         </h5>
                                     </a>
                                 </div>

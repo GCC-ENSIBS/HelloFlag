@@ -27,10 +27,10 @@
                     <div style="display: table-row; ">
                         {% for index, level_name in enumerate(levelinfo) %}
                             {% set level = levelinfo.get(level_name) %}
-                            <!--  
-                                Display Level Progress. 
-                                If there is only one level with boxes, display boxes.  
-                                If there is only one box with flags, display flags. 
+                            <!--
+                                Display Level Progress.
+                                If there is only one level with boxes, display boxes.
+                                If there is only one box with flags, display flags.
                             -->
                             {% set box_count_lvl = level.get("box_count") %}
                             {% set team_level = level.get("teams").get(team_name) %}
@@ -65,7 +65,7 @@
                                     {% set team_box = box.get("teams").get(team_name) %}
                                     {% set team_count_box = team_box.get("box_count") %}
                                     {% if box_count_lvl > 1 and flag_count_box > 0 and (flag_count_box < flag_count_all or flag_count_all > 35) %}
-                                        {% if not box.get("locked") %}
+                                        {% if not box.get("locked") or box.get("locked") %}
                                             {% if idx > 0 %}
                                                 <div class="summarycolumn" style="display: table-cell; width: 10px;"></div>
                                             {% end %}
@@ -76,7 +76,7 @@
                                                     {% else %}
                                                         <div class="bar minibar" style="width: 0%;"></div>
                                                     {% end %}
-                                                </div>    
+                                                </div>
                                             </div>
                                             {% set idx = idx + 1 %}
                                         {% end %}
@@ -103,7 +103,7 @@
                         {% end %}
                     </div>
                 </div>
-            </div>    
+            </div>
         </td>
         <td class="summarycolumn botcol" style="font-size: large; white-space: nowrap; vertical-align: middle; width: 40px; text-align: center;{% if options.use_bots %} display: table-cell;{% else %} display: none;{% end %}">{{ team.get("bot_count") }}</td>
         <td class="summarycolumn flagcol" style="{% if not options.rank_by == 'money' %}font-size: x-large; font-weight: bold;{% else %}font-size: large;{% end %} white-space: nowrap; vertical-align: middle; width: 50px; text-align: center;">{{ len(team.get("flags")) }}</div></td>
@@ -111,5 +111,5 @@
         <td class="summarycolumn shortcolumn" style="vertical-align: middle; padding-left: 20px;"><a id="{% if options.teams %}team{% else %}user{% end %}-details-button{{ index }}" class="btn btn-mini" data-toggle="modal" data-uuid="{% if options.teams %}{{ team.get('uuid') }}{% else %}{{ team.get('users')[0] }}{% end %}">{{ _("Details") }} &raquo;</a></td>
     </tr>
     {% end %}
-    
+
 {% end %}
