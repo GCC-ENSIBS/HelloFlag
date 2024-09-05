@@ -982,7 +982,7 @@ define(
 
 define(
     "starting_team_money",
-    default=500,
+    default=0,
     group="game",
     help="the starting money for a new team when using banking",
     type=int,

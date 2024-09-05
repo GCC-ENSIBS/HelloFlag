@@ -427,7 +427,7 @@ class AdminConfigurationHandler(BaseHandler):
         )
         self.config.banking = self.get_bool("banking", True)
         self.config.max_password_length = self.get_int("max_password_length", 7)
-        self.config.starting_team_money = self.get_int("starting_team_money", 500)
+        self.config.starting_team_money = self.get_int("starting_team_money", 0)
         self.config_bots()
         self.config.bot_reward = self.get_int("bot_reward", 50)
         self.config.use_black_market = self.get_bool("use_black_market", True)
