@@ -41,6 +41,7 @@ from models.GameLevel import GameLevel
 from models.Hint import Hint
 from models.Penalty import Penalty
 from models.Team import Team
+from models.User import User
 
 
 class FirstLoginHandler(BaseHandler):
@@ -425,6 +426,13 @@ class BoxHandler(BaseHandler):
                         tm.set_score("decay", int(tm.money - deduction))
                         self.dbsession.add(tm)
                         self.event_manager.flag_decayed(tm, flag)
+
+                    for item in Flag.user_captures(flag.id):
+                        tm = User.by_id(item[0])
+                        deduction = flag.dynamic_value(tm) - flag_value
+                        tm.set_score(int(tm.money - deduction))
+                        self.dbsession.add(tm)
+
                 team.set_score("flag", flag_value + team.money)
                 user.money += flag_value
                 team.add_flag(flag)

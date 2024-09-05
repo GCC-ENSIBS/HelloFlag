@@ -474,6 +474,13 @@ class AdminViewHandler(BaseHandler):
                                 tm.set_score("decay", int(tm.money - deduction))
                                 self.dbsession.add(tm)
                                 self.event_manager.flag_decayed(tm, flag)
+
+                            for item in Flag.user_captures(flag.id):
+                                tm = User.by_id(item[0])
+                                deduction = flag.dynamic_value(tm) - flag_value
+                                tm.set_score(int(tm.money - deduction))
+                                self.dbsession.add(tm)
+
                         team.set_score("flag", flag_value + team.money)
                         if user:
                             user.money += flag_value
@@ -912,7 +919,7 @@ class AdminEditHandler(BaseHandler):
                 raise ValidationError("Game level does not exist")
             if int(self.get_argument("number", level.number)) != level.number:
                 level.number = self.get_argument("number", "")
-            
+
             level.buyout = self.get_argument("buyout", 1) or 1
             lvlbuyout = self.get_argument("buyoutlvl", 1)
             level._type = self.get_argument("type", "buyout")
@@ -1177,7 +1184,7 @@ class AdminDeleteHandler(BaseHandler):
                     game_levels[0].number = 0
                 self.dbsession.add(game_levels[0])
                 game_levels[-1].next_level_id = None
-                self.dbsession.add(game_levels[-1])            
+                self.dbsession.add(game_levels[-1])
             self.dbsession.commit()
             self.redirect("/admin/view/game_levels")
         else:

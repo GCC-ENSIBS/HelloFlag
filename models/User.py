@@ -434,6 +434,9 @@ class User(DatabaseObject):
                     return self.algorithms[key]
         return None
 
+    def set_score(self, _money):
+        self.money = _money
+
     def to_dict(self):
         """Return user data as dictionary"""
         return {
