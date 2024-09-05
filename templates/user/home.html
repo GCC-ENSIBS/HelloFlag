@@ -111,6 +111,116 @@
                     </center>
                 </div>
             </div>
+            {% end %}
+
+        {% if not visitor and visitor %}
+		{% from models.MarketItem import MarketItem %}
+        <div class="row">
+            <div class="span11 offset1 well">
+                <h2>
+                    <i class="fa fa-trophy"></i>
+                    {{ _("Game Information") }}
+                </h2>
+                <hr>
+                <div class="row">
+                    <div class="span1 offset1" style="text-align: center; padding-top: 5px;">
+                        <i class="fa fa-sitemap" style="font-size: 180%;"></i>
+                    </div>
+                    <div class="span7 msgdescription">
+                            {{ _("Welcome to the Hello World! CTF platform 🥳") }}
+                            {{ _("Each team will target boxes of varying difficulty and sophistication, attempting to collect flags and win glory.  The 5 first teams at the end of the 3 rounds will compete in the epic finale. Good luck!") }}
+                    </div>
+                </div>
+                <br/>
+				{% if options.show_organizor_help %}
+				<div class="row">
+                    <div class="span1 offset1" style="text-align: center; padding-top: 5px;">
+                        <i class="fa fa-question-circle" style="font-size: 180%;"></i>
+                    </div>
+                    <div class="span7 msgdescription">
+							{{ _("If you have any questions or need help do not hestitate to ask one of the organizers.") }}
+                    </div>
+                </div>
+				<br/>
+				{% end %}
+                {% if options.dynamic_flag_value %}
+                <div class="row">
+                    <div class="span1 offset1" style="text-align: center; padding-top: 5px;">
+                        <i class="fa fa-bar-chart-o" style="font-size: 180%"></i>
+                    </div>
+                    <div class="span7 msgdescription">
+                        {% if options.dynamic_flag_type == "decay_future" %}
+                            {{ _("This game is set up to use dynamic scoring based on speed, meaning as other players capture the flags, the future value of those flags will decrease.  So grab them fast or lose out!") }}
+                        {% else %}
+                            {{ _("This game is set up to use dynamic scoring based on difficulty, meaning as other players capture the flags, the overall value of those flags will decrease and potentially reduce your score.") }}
+                        {% end %}
+                    </div>
+                </div>
+                <br/>
+                {% end %}
+                {% if options.penalize_flag_value %}
+                <div class="row">
+                    <div class="span1 offset1" style="text-align: center; padding-top: 5px;">
+                        <i class="fa fa-minus-circle" style="font-size: 180%;"></i>
+                    </div>
+                    <div class="span7 msgdescription">
+                        {{ _("Failure has a cost. Be careful as penalties are applied when incorrect answers are submitted.") }}
+                        {{ _("The deduction is") }} {{ options.flag_penalty_cost }}% {{ _("of the flag's value. It will start on the") }} {% set n = options.flag_start_penalty %}{{str(n)+("th" if 4<=n%100<=20 else {1:"st",2:"nd",3:"rd"}.get(n%10, "th"))}}
+                        {{ _("attempt and continue until the") }} {% set n = options.flag_stop_penalty - 1 %}{{str(n)+("th" if 4<=n%100<=20 else {1:"st",2:"nd",3:"rd"}.get(n%10, "th"))}}. {{ _("No further penalty thereafter.") }}
+                        <!-- Max loss is {{ (options.flag_stop_penalty - options.flag_start_penalty) * options.flag_penalty_cost }}% of the flag's value. -->
+                    </div>
+                </div>
+                <br/>
+                {% end %}
+                {% if options.banking %}
+                <div class="row">
+                    <div class="span1 offset1" style="text-align: center; padding-top: 5px;">
+                        <i class="fa fa-dollar" style="font-size: 180%;"></i>
+                    </div>
+                    <div class="span7 msgdescription">
+                        {{ _("It's about the money and it's time to cash in on those skills!  This game is set up to use a banking system, so waste no time to build your fortune and buy what you need to win.") }}
+                    </div>
+                </div>
+                <br/>
+                {% end %}
+                {% if options.use_black_market %}
+                <div class="row">
+                    <div class="span1 offset1" style="text-align: center; padding-top: 5px;">
+                        <i class="fa fa-shopping-cart" style="font-size: 180%;"></i>
+                    </div>
+                    <div class="span7 msgdescription">
+						{% if options.use_black_market %}
+							{{ _("The black market is open and you know a guy. The following items are available:") }}
+							{% set market_items = MarketItem.all() %}
+							{% if market_items %}
+								<ul>
+								{% for index, item in enumerate(market_items) %}
+									{% if item.name in options.allowed_market_items %}
+										<li>
+											<b>{{ _(item.name) }}</b>: {{ _(item.description) }}
+										</li>
+									{% end %}
+								{% end %}
+								</ul>
+							{% end %}
+						{% end %}
+                    </div>
+                </div>
+                <br/>
+                {% end %}
+                {% if options.use_bots %}
+                <div class="row">
+                    <div class="span1 offset1" style="text-align: center; padding-top: 5px;">
+                        <i class="fa fa-android" style="font-size: 180%;"></i>
+                    </div>
+                    <div class="span7 msgdescription">
+                        {{ _("Time to create a botnet. By uploading a small bot program to target machines, you can be periodically rewarded for each bot in your botnet; the larger the botnet the larger the reward.") }}
+                    </div>
+                </div>
+                <br/>
+                {% end %}
+            </div>
+        </div>
         {% end %}
     </div>
 
