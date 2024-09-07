@@ -377,6 +377,14 @@ def help():
 #                          Application Settings
 ########################################################################
 
+# LEDS HANDLING
+define(
+    "led_base_api",
+    default="http://localhost:5000/",
+    group="server",
+    help="api url for leds handling",
+)
+
 # HTTP Server Settings
 define(
     "origin",

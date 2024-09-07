@@ -49,6 +49,7 @@ from tornado.options import options
 from tornado.web import RequestHandler
 from tornado.websocket import WebSocketHandler
 
+from libs.LedsManager import led_round_start, led_stop
 
 class BaseHandler(RequestHandler):
 
@@ -258,6 +259,7 @@ class BaseHandler(RequestHandler):
             self.application.settings["game_started"] = True
             if self.config.use_bots:
                 self.application.settings["score_bots_callback"].start()
+            led_round_start()
             # Fire game start webhook
             send_game_start_webhook()
 
@@ -268,6 +270,7 @@ class BaseHandler(RequestHandler):
             self.application.settings["game_started"] = False
             if self.application.settings["score_bots_callback"]._running:
                 self.application.settings["score_bots_callback"].stop()
+            led_stop()
             # Fire game stop webhook
             send_game_stop_webhook()
 

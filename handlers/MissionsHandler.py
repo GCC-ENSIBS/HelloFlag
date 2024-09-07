@@ -43,6 +43,7 @@ from models.Penalty import Penalty
 from models.Team import Team
 from models.User import User
 
+from libs.LedsManager import led_flag, led_own
 
 class FirstLoginHandler(BaseHandler):
     @authenticated
@@ -309,6 +310,7 @@ class BoxHandler(BaseHandler):
                 send_box_complete_webhook(user, box)
             else:
                 success.append("Congratulations! You have completed " + box.name + ".")
+            led_own(user.team.name)
 
         # Check for Level Completion
         level = GameLevel.by_id(box.game_level_id)
@@ -441,6 +443,7 @@ class BoxHandler(BaseHandler):
                 self.dbsession.add(team)
                 self.dbsession.commit()
                 self.event_manager.flag_captured(user, flag)
+                led_flag(team.name)
                 return True
         return False
 
