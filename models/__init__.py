@@ -116,6 +116,7 @@ def cxt_dbsession():
 # Avoids mapper issues
 from models.Box import Box
 from models.Corporation import Corporation
+from models.Category import Category
 from models.FileUpload import FileUpload
 from models.Flag import Flag
 from models.FlagAttachment import FlagAttachment
