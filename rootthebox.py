@@ -215,10 +215,28 @@ def generate_teams_user_with_file(file_name):
                             f.write(str((team_name, user_pseudo, pwd)) + "\n")
 
 
+def generate_empty_corporation():
+    """Create an empty corporation"""
+
+    from models import Corporation, dbsession
+
+    corps = Corporation.all()
+    if len(corps) == 0:
+        corporation = Corporation()
+        corporation.name = ""
+        dbsession.add(corporation)
+        dbsession.commit()
+        corp_uuid = corporation.uuid
+    else:
+        corp_uuid = corps[0].uuid
+
+    return corp_uuid
+
+
 def generate_boxes_flag(file_path):
     """Creates boxes and flag from a csv file"""
 
-    from models import Box, Flag
+    from models import Box, Flag, Corporation, Category
     from models import dbsession
     import csv
 
@@ -227,32 +245,56 @@ def generate_boxes_flag(file_path):
 
         idx_box = 0
         boxes = []
+
+        corp_uuid = generate_empty_corporation()
+        corp = Corporation.by_uuid(corp_uuid)
+
         for row in reader:
-            name, description, points = row[0], row[1], int(row[2])
-            flag_name, flag_str, flag_points = row[3], row[4], int(row[5])
+            name, description, points, category_names = row[0], row[1], int(row[2]), row[3]
+            flag_name, flag_str, flag_points, flag_desc = row[4], row[5], int(row[6]), row[7]
 
             if name not in boxes:
-                print("Box added")
-
                 existing_box = dbsession.query(Box).filter_by(_name=name).first()
                 print(existing_box)
                 if not existing_box:
                     box = Box(name=name, operating_system="linux", description=description,
-                              game_level_id=1, value=points, corporation_id=1,
+                              game_level_id=1, value=points, corporation_id=corp.id,
                               flag_submission_type="SINGLE_SUBMISSION_BOX")
+
+                    # Add categories to the box
+                    for category_name in category_names.split("|"):
+                        categories = Category.list()
+                        if category_name in categories:
+                            box.categories.append(Category.by_category(category_name))
 
                     dbsession.add(box)
                     dbsession.commit()
 
+                    logging.info(box.to_dict())
+
                     boxes.append(name)
                     idx_box += 1
+                    print("Box added")
 
             existing_flag = dbsession.query(Flag).filter_by(name=flag_name).first()
             if not existing_flag:
-                print("Flag added")
-                flag = Flag(box_id=idx_box, name=flag_name, token=flag_str, value=flag_points, type="static")
+                flag = Flag(box_id=idx_box, name=flag_name, token=flag_str, value=flag_points,
+                            type="static", description=flag_desc)
                 dbsession.add(flag)
                 dbsession.commit()
+                print("Flag added")
+
+
+def generate_category(categories):
+    """Creates the categories"""
+    from models import Category, dbsession
+
+    for cat in categories:
+        existing_category = Category.list()
+        if cat not in existing_category:
+            _category = Category(_category=cat)
+            dbsession.add(_category)
+            dbsession.commit()
 
 
 def generate_admins(admin_names):
@@ -1204,6 +1246,14 @@ define(
 )
 
 define(
+    "generate_category",
+    default=['Crypto', 'Reverse', 'Pwn', 'Web', 'System'],
+    group="autosetup",
+    help="generate categories from a list",
+    multiple=True,
+)
+
+define(
     "add_admin",
     default=[],
     group="autosetup",
@@ -1321,6 +1371,8 @@ if __name__ == "__main__":
         generate_teams_user_with_file(options.generate_team_file)
     if options.add_admin:
         generate_admins(options.add_admin)
+    if options.generate_category:
+        generate_category(options.generate_category)
     if options.generate_boxes_flag:
         generate_boxes_flag(options.generate_boxes_flag)
 
