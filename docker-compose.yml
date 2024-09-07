@@ -1,5 +1,6 @@
 version: "3"
 services:
+  # Root-The-Box + CyberChef
   memcached:
     image: memcached:latest
     ports:
@@ -12,3 +13,33 @@ services:
       - ./files:/opt/rtb/files:rw
     environment:
       - COMPOSE_CONVERT_WINDOWS_PATHS=1
+  # CodiMD
+  database:
+    image: postgres:11.6-alpine
+    environment:
+      - POSTGRES_USER=codimd
+      - POSTGRES_PASSWORD=change_password
+      - POSTGRES_DB=codimd
+    volumes:
+          - "./codimd/database-data:/var/lib/postgresql/data"
+    restart: always
+  codimd:
+    image: nabo.codimd.dev/hackmdio/hackmd:2.5.4
+    environment:
+      - CMD_DB_URL=postgres://codimd:change_password@database/codimd
+      - CMD_USECDN=false
+        #- CMD_DOMAIN=codi.md:3000
+      - CMD_URL_PATH=codimd
+      - CMD_PORT=3000
+      - CMD_ALLOW_ANONYMOUS=true
+      - CMD_ALLOW_ANONYMOUS_EDITS=true
+      - CMD_ALLOW_ANONYMOUS_VIEWS=true
+      - CMD_EMAIL=false
+    depends_on:
+      - database
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./codimd/upload-data:/home/hackmd/app/public/uploads
+    restart: always
+
