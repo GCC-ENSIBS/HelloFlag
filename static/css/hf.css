@@ -118,7 +118,7 @@ blockquote {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(9, 12, 18, 0.72), rgba(9, 12, 18, 0.88));
+    background: linear-gradient(180deg, rgba(9, 12, 18, 0.72), rgba(9, 12, 18, 0.88))
 }
 
 .hf-aurora {
@@ -391,9 +391,25 @@ blockquote {
     font-size: 12px;
     color: var(--hf-text-mute);
 }
-.hf-alert { display: flex; gap: 10px; padding: 9px 8px; border-bottom: 1px solid var(--hf-line); }
+/* the icon is centred on the notification, whatever the text height */
+.hf-alert { display: flex; align-items: center; gap: 10px; padding: 9px 8px; border-bottom: 1px solid var(--hf-line); }
 .hf-alert:last-child { border-bottom: 0; }
-.hf-alert-icon { width: 28px; height: 28px; border-radius: 7px; flex: none; }
+.hf-alert-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    flex: none;
+    font-size: 20px;
+    line-height: 1;
+    background: rgba(164, 177, 205, 0.08);
+}
+.hf-alert-icon-ok { color: var(--hf-ok); }
+.hf-alert-icon-warn { color: var(--hf-warn); }
+.hf-alert-icon-danger { color: var(--hf-danger); }
+.hf-alert-icon-info { color: var(--hf-info); }
 .hf-alert-body { min-width: 0; }
 .hf-alert-title { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; }
 .hf-alert-title time { color: var(--hf-text-mute); font-size: 11px; white-space: nowrap; }

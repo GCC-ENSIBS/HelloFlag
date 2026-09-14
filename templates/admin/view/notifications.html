@@ -11,7 +11,7 @@
     <ul class="hf-notifylist">
         {% for notify in reversed(list(Notification.admin())) %}
         <li class="hf-alert">
-            {% if notify.icon_url is not None %}<img class="hf-alert-icon" src="{{ notify.icon_url }}" alt="" />{% end %}
+            {% include "../../notification_icon.html" %}
             <div class="hf-alert-body">
                 <div class="hf-alert-title">
                     <strong>{{ _(notify.title) }}</strong>
