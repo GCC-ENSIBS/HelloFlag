@@ -3,30 +3,28 @@
 {% block title %}{{ _("All Notifications") }}{% end %}
 
 {% block content %}
-    <div class="container">
-        <h2>
-            <i class="fa fa-envelope-o"></i>
-            {{ _("All Notifications") }}
-        </h2>
-        <br />
-        <div class="well">
+<div class="hf-page-head">
+    <h1><i class="fa fa-envelope-o"></i> {{ _("All Notifications") }}</h1>
+    <span class="hf-tag hf-tag-mono">{{ len(user.notifications) }}</span>
+</div>
+<div class="hf-card hf-card-flush">
+    {% if not len(user.notifications) %}
+    <div class="hf-empty">{{ _("Nothing here yet") }}</div>
+    {% else %}
+    <ul class="hf-notifylist">
         {% for notify in reversed(list(user.notifications)) %}
-        <div class="row">
-            <div class="span1 offset1">
-                {% if notify.icon_url is not None %}
-                    <img src="{{ notify.icon_url }}" style="width: 70%; float:right;" />
-                {% end %}
-            </div>
-            <div class="span7">
-                <p>
+        <li class="hf-alert">
+            {% if notify.icon_url is not None %}<img class="hf-alert-icon" src="{{ notify.icon_url }}" alt="" />{% end %}
+            <div class="hf-alert-body">
+                <div class="hf-alert-title">
                     <strong>{{ _(notify.title) }}</strong>
-                    {{ notify.created.strftime("%I:%M%p %x") }}
-                    <br />{{ notify.message }}
-                </p>
+                    <time>{{ notify.created.strftime("%I:%M%p %x") }}</time>
+                </div>
+                <p>{{ notify.message }}</p>
             </div>
-        </div>
-        <hr style="margin-top: 4px; margin-bottom: 14px;">
+        </li>
         {% end %}
-        </div>
-    </div>
+    </ul>
+    {% end %}
+</div>
 {% end %}

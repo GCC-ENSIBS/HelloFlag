@@ -26,9 +26,7 @@ This file contains the code for displaying flags / recv flag submissions
 
 import json
 import logging
-from builtins import next, str
 
-from past.utils import old_div
 from tornado.options import options
 
 from handlers.BaseHandlers import BaseHandler
@@ -314,8 +312,8 @@ class BoxHandler(BaseHandler):
 
         # Check for Level Completion
         level = GameLevel.by_id(box.game_level_id)
-        level_progress = old_div(
-            len(user.team.level_flags(level.number)), float(len(level.flags))
+        level_progress = len(user.team.level_flags(level.number)) / float(
+            len(level.flags)
         )
         if level_progress == 1.0 and level not in user.team.game_levels:
             reward_dialog = ""

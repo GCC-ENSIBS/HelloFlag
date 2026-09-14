@@ -30,7 +30,7 @@ from base64 import b64decode
 from os import listdir, path, urandom
 from shutil import copyfile
 
-import defusedxml.cElementTree as ET
+import defusedxml.ElementTree as ET
 from tornado.options import options
 
 from libs.ConfigHelpers import save_config, save_config_image

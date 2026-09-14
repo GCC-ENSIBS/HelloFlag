@@ -23,7 +23,7 @@ Created on Mar 11, 2012
 import binascii
 import enum
 import os
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 from collections import OrderedDict
 from os import urandom
 from uuid import uuid4
@@ -55,9 +55,6 @@ class FlagsSubmissionType(str, enum.Enum):
     SINGLE_SUBMISSION_BOX = "SINGLE_SUBMISSION_BOX"
 
 
-from builtins import (  # noqa: E402
-    str,
-)
 
 
 class Box(DatabaseObject):

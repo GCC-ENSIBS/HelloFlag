@@ -2,42 +2,43 @@
 
 {% block title %}{{ _("Password Reset") }}{% end %}
 
-{% block header %}
-<link href="/static/css/pages/public/login.css" rel="stylesheet">
-{% end %}
-
 {% block content %}
-<div class="container">
-    <form class="form-signin" action="/reset" method="post">
-        <h3 class="form-signin-heading">
-            <i class="fa fa-lock"></i>
-            {{ _("Password Reset") }}
-        </h3>
+<div class="hf-auth">
+    <div class="hf-auth-card">
+        <div class="hf-auth-head">
+            <span class="hf-brand-mark"><i class="fa fa-key"></i></span>
+            <h1>{{ _("Password Reset") }}</h1>
+            <p class="hf-sub text-muted">{{ _("We will email you a reset link") }}</p>
+        </div>
         {% if errors is not None and len(errors) != 0 %}
             {% for error in errors %}
-                <div class="alert alert-error" >
-                    <a class="close" data-dismiss="alert" href="#">&times;</a>
-                    <h4 class="alert-heading">{{ _("Error") }}</h4>
-                    {{ error }}
-                </div>
+            <div class="alert alert-error">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <h4 class="alert-heading">{{ _("Error") }}</h4>
+                {{ error }}
+            </div>
             {% end %}
         {% end %}
         {% if info is not None and len(info) != 0 %}
             {% for item in info %}
-                <div class="alert alert-info" >
-                    <a class="close" data-dismiss="alert" href="#">&times;</a>
-                    <h4 class="alert-heading">{{ _("Information") }}</h4>
-                    {{ item }}
-                </div>
+            <div class="alert alert-info">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <h4 class="alert-heading">{{ _("Information") }}</h4>
+                {{ item }}
+            </div>
             {% end %}
         {% end %}
-        {% raw xsrf_form_html() %}
-        <input name="email" type="text" class="input-block-level" placeholder="{{ _('email') }}" autofocus>
-        <button class="btn btn-primary" type="submit">
-            <i class="fa fa-key"></i>
-            {{ _("Request Password Reset") }}
-        </button>
-    </form>
-</div> <!-- /container -->
-<br />
+        <form action="/reset" method="post">
+            {% raw xsrf_form_html() %}
+            <div class="control-group">
+                <label class="control-label" for="email">{{ _("email") }}</label>
+                <input id="email" name="email" type="text" placeholder="{{ _('email') }}" autofocus>
+            </div>
+            <button class="btn btn-primary btn-block" type="submit">
+                <i class="fa fa-key"></i>{{ _("Request Password Reset") }}
+            </button>
+        </form>
+        <div class="hf-auth-foot"><a href="/login">{{ _("Back to login") }}</a></div>
+    </div>
+</div>
 {% end %}

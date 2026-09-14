@@ -1,5 +1,22 @@
-version: "3"
 services:
+  db:
+    image: mysql:8.4
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - db-data:/var/lib/mysql
+    expose:
+      - "3306"
+    environment:
+      - MYSQL_DATABASE=${SQL_DATABASE:-rootthebox}
+      - MYSQL_USER=${SQL_USER:-rtb}
+      - MYSQL_PASSWORD=${SQL_PASSWORD:-rtb}
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
   memcached:
     image: memcached:latest
     expose:
@@ -11,9 +28,23 @@ services:
     volumes:
       - ./files:/opt/rtb/files:rw
     depends_on:
-      - memcached
+      db:
+        condition: service_healthy
+      memcached:
+        condition: service_started
     environment:
       - COMPOSE_CONVERT_WINDOWS_PATHS=1
       - MEMCACHED=memcached:11211
+      # websockets are refused unless this matches the host you browse the game on
+      - ORIGIN=${ORIGIN:-ws://localhost:8888}
+      - SQL_DIALECT=mysql
+      - SQL_HOST=db
+      - SQL_PORT=3306
+      - SQL_DATABASE=${SQL_DATABASE:-rootthebox}
+      - SQL_USER=${SQL_USER:-rtb}
+      - SQL_PASSWORD=${SQL_PASSWORD:-rtb}
       # Optional: pick the admin password, otherwise one is generated on first boot
       - ADMIN_PASSWORD=${ADMIN_PASSWORD:-rootthebox}
+
+volumes:
+  db-data:

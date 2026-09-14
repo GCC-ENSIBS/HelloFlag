@@ -1,0 +1,54 @@
+{% from models.GameLevel import GameLevel %}
+{# shared level/box progress list: `flagset` holds captured flags, `skip_locked` hides locked boxes,
+   `require_started` waits for the game to start before listing anything #}
+{% if require_started and not game_started %}
+    <div class="hf-empty"><i class="fa fa-pause"></i>&nbsp;{{ _("Waiting for the game to start...") }}</div>
+{% else %}
+    {% for level in GameLevel.all() %}
+        {% set show_level = level.type != "hidden" or level in team.game_levels %}
+        {% if team and show_level and len(level.unlocked_boxes()) > 0 %}
+        <section class="hf-level">
+            <header class="hf-level-head">
+                {% if level.type == "none" or level in team.game_levels %}
+                    <i class="fa fa-unlock-alt"></i>
+                {% else %}
+                    <i class="fa fa-lock"></i>
+                {% end %}
+                <h4>{{ level.name }}</h4>
+                {% if level.description %}<span class="hf-level-desc">{{ level.description }}</span>{% end %}
+                <span class="hf-spacer"></span>
+                <span class="hf-tag hf-tag-mono">{{ len(team.level_flags(level.number)) }} / {{ len(level.flags) }}</span>
+            </header>
+            {% if len(level.flags) %}
+            <div class="progress minibar">
+                <div class="bar" style="width: {{ (len(team.level_flags(level.number)) / float(len(level.flags))) * 100.0 }}%;"></div>
+            </div>
+            {% end %}
+            {% if level.type == "none" or level in team.game_levels %}
+                <ul class="hf-boxlist">
+                {% for box in sorted(level.unlocked_boxes()) %}
+                    {% if len(box.flags) > 0 and not (skip_locked and box.locked) %}
+                    <li class="hf-boxrow">
+                        <a class="hf-boxname" href="/user/missions/boxes?uuid={{ box.uuid }}">
+                            {% if box.operating_system.lower() == "windows" %}<i class="fa fa-windows"></i>
+                            {% elif box.operating_system.lower() == "linux" %}<i class="fa fa-linux"></i>
+                            {% elif box.operating_system.lower() == "apple" %}<i class="fa fa-apple"></i>
+                            {% elif box.operating_system.lower() == "?" %}<i class="fa fa-desktop"></i>
+                            {% else %}<i class="fa fa-th"></i>{% end %}
+                            <span>{{ box.corporation.name }} &middot; {{ box.name }}</span>
+                            {% if box._locked %}<i class="fa fa-lock"></i>{% else %}<i class="fa fa-unlock-alt"></i>{% end %}
+                        </a>
+                        <div class="hf-flagbars">
+                            {% for flag in sorted(box.flags) %}
+                            <span class="hf-flagbar{% if flag in flagset %} is-captured{% end %}" title="{{ flag.name }}"></span>
+                            {% end %}
+                        </div>
+                    </li>
+                    {% end %}
+                {% end %}
+                </ul>
+            {% end %}
+        </section>
+        {% end %}
+    {% end %}
+{% end %}

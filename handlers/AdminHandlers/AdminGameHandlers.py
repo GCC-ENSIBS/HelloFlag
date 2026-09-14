@@ -27,19 +27,21 @@ import logging
 import os
 import subprocess
 import time
-import xml.etree.cElementTree as ET
-from builtins import str
+import xml.etree.ElementTree as ET
 from datetime import datetime
 from string import printable
 from tempfile import NamedTemporaryFile
 
 import defusedxml.minidom
-from past.builtins import basestring
 from tornado.ioloop import PeriodicCallback
 from tornado.options import options
 
 from handlers.BaseHandlers import BaseHandler
-from libs.ConfigHelpers import save_config
+from libs.ConfigHelpers import (
+    remove_config_image,
+    save_config,
+    save_config_upload,
+)
 from libs.ConsoleColors import *
 from libs.EventManager import EventManager
 from libs.Scoreboard import Scoreboard, score_bots
@@ -365,7 +367,7 @@ class AdminConfigurationHandler(BaseHandler):
             return default
 
     def get_bool(self, name, default=""):
-        if not isinstance(default, basestring):
+        if not isinstance(default, str):
             default = str(default).lower()
         return self.get_argument(name, default) == "true"
 
@@ -410,6 +412,9 @@ class AdminConfigurationHandler(BaseHandler):
         self.config.show_mvp = self.get_bool("show_mvp")
         self.config.mvp_max = self.get_int("mvp_max", 10)
         self.config.team_sharing = self.get_bool("team_sharing")
+        self.config.use_cyberchef = self.get_bool("use_cyberchef", True)
+        self.config.use_file_sharing = self.get_bool("use_file_sharing", True)
+        self.config.use_pastebin = self.get_bool("use_pastebin", True)
         self.config.dynamic_flag_value = self.get_bool("dynamic_flag_value", False)
         self.config.dynamic_flag_type = self.get_argument(
             "dynamic_flag_type", "decay_future"
@@ -448,6 +453,46 @@ class AdminConfigurationHandler(BaseHandler):
         elif self.application.settings["score_bots_callback"]._running:
             logging.info("Stopping botnet callback function")
             self.application.settings["score_bots_callback"].stop()
+
+    def on_finish(self):
+        save_config()
+
+
+class AdminHomePageHandler(BaseHandler):
+
+    """Allows the admin to customize the welcome page"""
+
+    @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
+    def get(self, *args, **kwargs):
+        self.render("admin/home_page.html", errors=None, config=self.config)
+
+    @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
+    def post(self, *args, **kwargs):
+        """Update the welcome page settings, including its uploaded images"""
+        errors = []
+        self.config.home_markdown = self.get_argument("home_markdown", "").splitlines()
+        self.config.home_show_login = self.get_argument("home_show_login", "") == "true"
+        self.config.home_show_scoreboard = (
+            self.get_argument("home_show_scoreboard", "") == "true"
+        )
+        for name in ["game_icon", "home_background"]:
+            clear = self.get_argument("%s_clear" % name, "") == "true"
+            upload = self.request.files.get(name, [None])[0]
+            if not clear and (not upload or not len(upload["body"])):
+                continue
+            previous = self.config[name]
+            try:
+                self.config[name] = "" if clear else save_config_upload(upload)
+            except ValidationError as error:
+                errors.append(str(error))
+                continue
+            # an image is only ever referenced by this option, drop the old file
+            remove_config_image(previous)
+        self.render("admin/home_page.html", errors=errors, config=self.config)
 
     def on_finish(self):
         save_config()
@@ -570,7 +615,13 @@ class AdminExportHandler(BaseHandler):
         """
         game_elem = ET.SubElement(root, "configuration")
         game_list = options.group_dict("game")
-        images = ["ctf_logo", "story_character", "scoreboard_right_image"]
+        images = [
+            "ctf_logo",
+            "story_character",
+            "scoreboard_right_image",
+            "game_icon",
+            "home_background",
+        ]
         for key in game_list:
             value = game_list[key]
             if key in images and len(value) > 0:

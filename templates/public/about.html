@@ -1,91 +1,52 @@
-{% extends "../main.html" %} {% block title %} {{ _("About") }} {% end %} {% block head %}
-{% end %} {% block content %}
-<div class="container">
-    <h2>
-        <i class="fa fa-info-circle"></i>
-        {{ _("About") }} v{{ handler.application.settings["version"] }}
-    </h2>
-    <br />
-    <div class="well">
-        <div style="text-align: center;">
-            
-                <!-- Firefox fix -->
-                <!-- Programming -->
+{% extends "../main.html" %}
 
-                <h2>{{ _("Programming") }}</h2>
-                <hr>
-                <h3>
-                    <i class="fa fa-trophy"></i> Moloch
-                </h3>
-                <h3>
-                    ElJeffe
-                </h3>
-                <br />
-                <h2>{{ _("With contributions from") }}</h2>
-                <table style="width:100%; text-align: center;">
-                    <tbody>
-                        <tr>
-                            <td><h3>AnarKyx01</h3></td>
-                            <td><h3>ElmoArmy</h3></td>
-                            <td><h3>lstep</h3></td>
-                        </tr>
-                        <tr>
-                            <td><h3>askew</h3></td>
-                            <td><h3>F13</h3></td>
-                            <td><h3>ekstrah</h3></td>
-                        </tr>
-                        <tr>
-                            <td><h3>iggykrajci</h3></td>
-                            <td><h3>garanews</h3></td>
-                            <td><h3>shshzi</h3></td>
-                        </tr>
-                        <tr>
-                            <td><h3>tinmartinet</h3></td>
-                            <td><h3>Enki</h3></td>
-                            <td><h3>anthturner</h3></td>
-                        </tr>
-                        <tr>
-                            <td><h3>yolylight</h3></td>
-                            <td><h3>Eriner</h3></td>
-                            <td><h3>jinghli</h3></td>
-                        </tr>
-                        <tr>
-                            <td><h3>RyPeck</h3></td>
-                            <td><h3>bkimminich</h3></td>            
-                            <td><h3>remi1411</h3></td>
-                        </tr>
-                        <tr>
-                            <td><h3>lavalamp</h3></td>
-                            <td><h3>dadokkio</h3></td>
-                            <td><h3>Und3rf10w</h3></td>
-                        </tr>
-                        <tr>      
-                            <td><h3>pointhi</h3></td>
-                            <td><h3>sporky</h3></td>
-                            <td><h3>dNetGuru</h3></td>
-                        </tr>
-                        <tr>
-                            <td><h3>Arrow768</h3></td>
-                            <td><h3>PunitTailor55</h3></td>
-                            <td><h3>simon-hoegl</h3></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <br />
-                <!-- Special Thanks -->
-                <hr>
-                <h2>{{ _("Special Thanks") }}</h2>
-                <hr>
-                <a href="http://www.blackhartfilms.com/" target="_blank">
-                    <!-- Morris Image (https://pixabay.com/photos/moody-lighting-dark-grunge-719229/) / Free for commercial use - No attribution required -->
-                    <img src="/static/images/blackheart.png" />
-                </a>
-                <br /><br />
-                <a href="https://www.bishopfox.com/" target="_blank">
-                    <img src="/static/images/bf.png" />
-                </a>
-                <br /><br />
+{% block title %}{{ _("About") }}{% end %}
+
+{% block content %}
+<div class="hf-page-head">
+    <div>
+        <p class="hf-eyebrow">{{ _("About") }}</p>
+        <h1>Root the Box <span class="hf-tag hf-tag-mono">v{{ handler.application.settings["version"] }}</span></h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-lg-6">
+        <div class="hf-card">
+            <div class="hf-card-head"><h3>{{ _("Programming") }}</h3></div>
+            <ul class="hf-people">
+                <li><i class="fa fa-trophy"></i> Moloch</li>
+                <li><i class="fa fa-code"></i> ElJeffe</li>
+            </ul>
         </div>
     </div>
+    <div class="col-xs-12 col-lg-6">
+        <div class="hf-card">
+            <div class="hf-card-head"><h3>{{ _("Special Thanks") }}</h3></div>
+            <div class="hf-inline">
+                <a href="http://www.blackhartfilms.com/" target="_blank" rel="noopener noreferrer">
+                    <img src="/static/images/blackheart.png" alt="Blackhart Films" />
+                </a>
+                <a href="https://www.bishopfox.com/" target="_blank" rel="noopener noreferrer">
+                    <img src="/static/images/bf.png" alt="Bishop Fox" />
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="hf-card">
+    <div class="hf-card-head"><h3>{{ _("With contributions from") }}</h3></div>
+    <ul class="hf-people hf-people-grid">
+        <li>AnarKyx01</li><li>ElmoArmy</li><li>lstep</li>
+        <li>askew</li><li>F13</li><li>ekstrah</li>
+        <li>iggykrajci</li><li>garanews</li><li>shshzi</li>
+        <li>tinmartinet</li><li>Enki</li><li>anthturner</li>
+        <li>yolylight</li><li>Eriner</li><li>jinghli</li>
+        <li>RyPeck</li><li>bkimminich</li><li>remi1411</li>
+        <li>lavalamp</li><li>dadokkio</li><li>Und3rf10w</li>
+        <li>pointhi</li><li>sporky</li><li>dNetGuru</li>
+        <li>Arrow768</li><li>PunitTailor55</li><li>simon-hoegl</li>
+    </ul>
 </div>
 {% end %}

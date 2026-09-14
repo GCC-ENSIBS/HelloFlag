@@ -9,23 +9,16 @@
 <link href="/static/css/terminal.css" rel="stylesheet" />
 {% end %}
 
-{% from tornado.options import options %}
 {% block content %}
-    {% if "Federal Reserve" in options.allowed_market_items and user.has_item("Federal Reserve") %}
-        <div class="container">
-            <h1>{{ _("Federal Reserve Bank") }}</h1>
-            <br />
-            <div class="well" >
-                <form id="csrf">
-                    {% raw xsrf_form_html() %}
-                </form>
-                <h3>
-                    <i class="fa fa-terminal"></i>
-                    {{ _("Mainframe Console") }}
-                </h3>
-                <div id="console" style="width: auto; height: 500px;">
-                </div>
-            </div>
-        </div>
-    {% end %}
+{% from tornado.options import options %}
+{% if "Federal Reserve" in options.allowed_market_items and user.has_item("Federal Reserve") %}
+<div class="hf-page-head">
+    <h1><i class="fa fa-dollar"></i> {{ _("Federal Reserve Bank") }}</h1>
+</div>
+<div class="hf-card">
+    <div class="hf-card-head"><h3><i class="fa fa-terminal"></i> {{ _("Mainframe Console") }}</h3></div>
+    <form id="csrf">{% raw xsrf_form_html() %}</form>
+    <div id="console" class="hf-console"></div>
+</div>
+{% end %}
 {% end %}

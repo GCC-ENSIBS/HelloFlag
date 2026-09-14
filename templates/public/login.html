@@ -3,50 +3,56 @@
 {% block title %}{{ _("Authenticate") }}{% end %}
 
 {% block header %}
-<link href="/static/css/pages/public/login.css" rel="stylesheet">
 {% from tornado.options import options %}
 {% end %}
 
 {% block content %}
-<div class="container">
-    <form class="form-signin" action="/login" method="post">
-        <h3 class="form-signin-heading">
-            <i class="fa fa-lock"></i>
-            {{ _("Authentication Required") }}
-        </h3>
+{% from tornado.options import options %}
+<div class="hf-auth">
+    <div class="hf-auth-card">
+        <div class="hf-auth-head">
+            {% include "../brand_mark.html" %}
+            <h1>{{ _("Sign in") }}</h1>
+            <p class="hf-sub text-muted">{{ options.game_name }}</p>
+        </div>
         {% if errors is not None and len(errors) != 0 %}
             {% for error in errors %}
-                <div class="alert alert-error" >
-                    <a class="close" data-dismiss="alert" href="#">&times;</a>
-                    <h4 class="alert-heading">{{ _("Authentication Failure") }}</h4>
-                    {{ error }}
-                </div>
+            <div class="alert alert-error">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <h4 class="alert-heading">{{ _("Authentication Failure") }}</h4>
+                {{ error }}
+            </div>
             {% end %}
         {% end %}
         {% if info is not None and len(info) != 0 %}
             {% for item in info %}
-                <div class="alert alert-info" >
-                    <a class="close" data-dismiss="alert" href="#">&times;</a>
-                    <h4 class="alert-heading">{{ _("Information") }}</h4>
-                    {{ item }}
-                </div>
+            <div class="alert alert-info">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <h4 class="alert-heading">{{ _("Information") }}</h4>
+                {{ item }}
+            </div>
             {% end %}
         {% end %}
-        {% raw xsrf_form_html() %}
-        <input name="account" type="text" class="input-block-level" placeholder="{{ _('Handle') }}" autofocus>
-        <input name="password" type="password" class="input-block-level" placeholder="{{ _('Password') }}" autocomplete="off">
-        {% if options.use_recaptcha %}
-        {% module Recaptcha() %}
-        <br />
-        {% end %}
-        <button class="btn btn-primary" type="submit">
-            <i class="fa fa-sign-in"></i>
-            {{ _("Login") }}
-        </button>
-        {% if len(options.mail_host) > 0 %}
-        <a href="/reset" style="float: right;">{{ _('Forgot Password') }}</a>
-        {% end %}
-    </form>
-</div> <!-- /container -->
-<br />
+        <form action="/login" method="post">
+            {% raw xsrf_form_html() %}
+            <div class="control-group">
+                <label class="control-label" for="account">{{ _("Handle") }}</label>
+                <input id="account" name="account" type="text" placeholder="{{ _('Handle') }}" autofocus>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="password">{{ _("Password") }}</label>
+                <input id="password" name="password" type="password" placeholder="{{ _('Password') }}" autocomplete="off">
+            </div>
+            {% if options.use_recaptcha %}
+            <div class="control-group">{% module Recaptcha() %}</div>
+            {% end %}
+            <button class="btn btn-primary btn-block" type="submit">
+                <i class="fa fa-sign-in"></i>{{ _("Login") }}
+            </button>
+        </form>
+        <div class="hf-auth-foot">
+            {% if len(options.mail_host) > 0 %}<a href="/reset">{{ _("Forgot Password") }}</a>{% end %}
+        </div>
+    </div>
+</div>
 {% end %}

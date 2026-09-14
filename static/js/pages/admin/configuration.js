@@ -421,6 +421,34 @@ $(document).ready(function() {
         penalty_cost_update();
     });
 
+
+    /* Simple enable / disable switches */
+    function toolToggle(name) {
+        var input = $("#" + name);
+        function paint() {
+            var on = input.val() === "true";
+            $("#" + name + "-enable-icon")
+                .toggleClass("fa-check-square-o", on)
+                .toggleClass("fa-square-o", !on);
+            $("#" + name + "-disable-icon")
+                .toggleClass("fa-check-square-o", !on)
+                .toggleClass("fa-square-o", on);
+        }
+        $("#" + name + "-enable").click(function() {
+            input.val("true");
+            paint();
+        });
+        $("#" + name + "-disable").click(function() {
+            input.val("false");
+            paint();
+        });
+        paint();
+    }
+
+    toolToggle("use-cyberchef");
+    toolToggle("use-file-sharing");
+    toolToggle("use-pastebin");
+
     /* Enable popovers */
     $("#game-name").popover({placement:'right', trigger:'hover'});
     $("#require-email-button").popover({placement:'right', trigger:'hover'});

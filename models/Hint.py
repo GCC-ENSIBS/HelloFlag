@@ -20,8 +20,7 @@ Created on Aug 11, 2013
 """
 
 
-import xml.etree.cElementTree as ET
-from builtins import str
+import xml.etree.ElementTree as ET
 from uuid import uuid4
 
 from sqlalchemy import Column, ForeignKey

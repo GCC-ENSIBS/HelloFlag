@@ -5,11 +5,33 @@
  {{ options.game_name }}
 {% end %}
 
+{% block header %}
+<script src="/static/js/libs/commonmark.min.js"></script>
+<script src="/static/js/pages/public/home.js"></script>
+{% end %}
+
 {% block content %}
- <div id="home_container" style="margin-right: auto; margin-left: auto; min-width: 940px; display: table; padding: 30px;">
-     <div class="well" style="position: relative; display: table-row; min-width: 850px; min-height: 600px;">
-         <img src="{{options.ctf_logo}}" style="margin-left: auto; margin-right: auto; display: block; margin-top: 30px;">
-         <h2 style="margin-top: 15px; text-align: center; text-shadow: 2px 2px .3px black;">{{options.ctf_tagline}}</h2>
-     </div>
- </div>
+{% from tornado.options import options %}
+<div class="hf-hero hf-card hf-card-glow">
+    <div class="hf-hero-logo">
+        {% include "../brand_mark.html" %}
+        <h1 class="hf-hero-title">{{ options.game_name }}</h1>
+    </div>
+    <p class="hf-eyebrow">{{ _("Capture the Flag") }}</p>
+    {% if len(options.home_markdown) %}
+    <div class="hf-hero-content markdown">{{ "\n".join(options.home_markdown) }}</div>
+    {% else %}
+    <p class="hf-hero-tagline">{{ options.ctf_tagline }}</p>
+    {% end %}
+    {% if options.home_show_login or options.home_show_scoreboard %}
+    <div class="hf-inline hf-hero-actions">
+        {% if options.home_show_login %}
+        <a class="btn btn-primary btn-large" href="/login"><i class="fa fa-sign-in"></i>{{ _("Login") }}</a>
+        {% end %}
+        {% if options.home_show_scoreboard %}
+        <a class="btn btn-large" href="/scoreboard"><i class="fa fa-list"></i>{{ _("Scoreboard") }}</a>
+        {% end %}
+    </div>
+    {% end %}
+</div>
 {% end %}

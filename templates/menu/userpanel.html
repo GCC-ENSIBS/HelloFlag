@@ -1,0 +1,51 @@
+{% from tornado.options import options %}
+<div class="hf-sidebar-foot">
+    <div class="hf-userbar">
+        <div class="dropdown dropup hf-userbar-cell">
+            <a class="hf-userchip dropdown-toggle" data-toggle="dropdown" href="#">
+                <img class="hf-userchip-avatar" src="/avatars/{{ user.avatar }}" alt="" />
+                <span class="hf-userchip-name">{{ user.handle }}</span>
+                <i class="fa fa-angle-up"></i>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="/user/settings"><i class="fa fa-fw fa-gears"></i>{{ _("Settings") }}</a></li>
+                <li><a href="/about"><i class="fa fa-fw fa-info-circle"></i>{{ _("About") }}</a></li>
+                {% if user.is_admin() %}
+                <li><a href="/admin"><i class="fa fa-fw fa-shield"></i>{{ _("Administration") }}</a></li>
+                {% end %}
+                <li class="divider"></li>
+                <li>
+                    <form id="logout-form" action="/logout" method="post">{% raw xsrf_form_html() %}</form>
+                    <a id="logout" href="#"><i class="fa fa-fw fa-sign-out"></i>{{ _("Logout") }}</a>
+                </li>
+            </ul>
+        </div>
+        <div class="dropdown dropup">
+            <a class="hf-iconbtn dropdown-toggle" data-toggle="dropdown" href="#" title="{{ _('Notifications') }}">
+                <i class="fa fa-bell"></i>
+                {% if len(user.notifications) %}<span class="hf-dot"></span>{% end %}
+            </a>
+            <ul class="dropdown-menu hf-alert-menu">
+                <li class="hf-alert-head">
+                    <span>{{ _("Notifications") }}</span>
+                    <a href="/notifications/all">{{ _("See All") }} &raquo;</a>
+                </li>
+                {% for notify in reversed(list(user.notifications[-5:])) %}
+                <li class="hf-alert">
+                    {% if notify.icon_url is not None %}<img class="hf-alert-icon" src="{{ notify.icon_url }}" alt="" />{% end %}
+                    <div class="hf-alert-body">
+                        <div class="hf-alert-title">
+                            <strong>{{ _(notify.title) }}</strong>
+                            <time>{{ notify.created.strftime("%I:%M%p %x") }}</time>
+                        </div>
+                        <p>{{ notify.message }}</p>
+                    </div>
+                </li>
+                {% end %}
+                {% if not len(user.notifications) %}
+                <li class="hf-alert hf-alert-empty">{{ _("Nothing here yet") }}</li>
+                {% end %}
+            </ul>
+        </div>
+    </div>
+</div>

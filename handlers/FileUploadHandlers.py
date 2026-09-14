@@ -25,7 +25,6 @@ This file contains handlers related to the file sharing functionality
 
 
 import logging
-from builtins import str
 
 from tornado.options import options
 
@@ -45,18 +44,18 @@ class FileUploadHandler(BaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
-        if options.team_sharing:
+        if options.team_sharing and options.use_file_sharing:
             """Renders upload file page"""
             user = self.get_current_user()
-            self.render(
-                "file_upload/shared_files.html", errors=None, shares=user.team.files
-            )
+            # an admin account can live outside of any team
+            shares = user.team.files if user.team else []
+            self.render("file_upload/shared_files.html", errors=None, shares=shares)
         else:
             self.redirect("/404")
 
     @authenticated
     def post(self, *args, **kwargs):
-        if options.team_sharing:
+        if options.team_sharing and options.use_file_sharing:
             """Shit form validation"""
             user = self.get_current_user()
             self.errors = []
@@ -100,7 +99,7 @@ class FileUploadHandler(BaseHandler):
             self.redirect("/404")
 
     def create_file(self, team, shared_file):
-        if options.team_sharing:
+        if options.team_sharing and options.use_file_sharing:
             """Saves uploaded file"""
             try:
                 file_upload = FileUpload(team_id=team.id)
@@ -122,7 +121,7 @@ class FileDownloadHandler(BaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
-        if options.team_sharing:
+        if options.team_sharing and options.use_file_sharing:
             """Get a file and send it to the user"""
             user = self.get_current_user()
             shared_file = FileUpload.by_uuid(self.get_argument("uuid", ""))
@@ -148,7 +147,7 @@ class FileDeleteHandler(BaseHandler):
 
     @authenticated
     def post(self, *args, **kwargs):
-        if options.team_sharing:
+        if options.team_sharing and options.use_file_sharing:
             user = self.get_current_user()
             shared_file = FileUpload.by_uuid(self.get_argument("uuid", ""))
             if user.is_admin():

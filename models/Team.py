@@ -22,8 +22,7 @@ Created on Mar 12, 2012
 
 
 import os
-import xml.etree.cElementTree as ET
-from builtins import str
+import xml.etree.ElementTree as ET
 from datetime import datetime
 from random import randint
 from uuid import uuid4

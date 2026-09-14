@@ -10,24 +10,19 @@
 {% end %}
 
 {% block content %}
-    <div class="container">
-        <h1>
-            <i class="fa fa-folder-open-o"></i>
-            {{ _("Game Materials") }}
-        </h1>
-        <br />
-        {% if errors != None and len(errors) != 0 %}
-          {% for error in errors %}
-              <div class="alert alert-error">
-                <a class="close" data-dismiss="alert" href="#">&times;</a>
-                <h4 class="alert-heading">{{ _("ERROR") }}</h4>
-                {{ error }}
-              </div>
-          {% end %}
-        {% end %}
-        <div class="well">
-            <div id="container" data-subdir="{{ subdir }}">
-            </div>
-        </div>
+<div class="hf-page-head">
+    <h1><i class="fa fa-folder-open-o"></i> {{ _("Game Materials") }}</h1>
+</div>
+{% if errors != None and len(errors) != 0 %}
+    {% for error in errors %}
+    <div class="alert alert-error">
+        <a class="close" data-dismiss="alert" href="#">&times;</a>
+        <h4 class="alert-heading">{{ _("ERROR") }}</h4>
+        {{ error }}
     </div>
+    {% end %}
+{% end %}
+<div class="hf-card">
+    <div id="container" data-subdir="{{ subdir }}"></div>
+</div>
 {% end %}

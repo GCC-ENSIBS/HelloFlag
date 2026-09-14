@@ -20,8 +20,7 @@ Created on Mar 11, 2012
 """
 
 
-import xml.etree.cElementTree as ET
-from builtins import str
+import xml.etree.ElementTree as ET
 from uuid import uuid4
 
 from ipaddress import ip_address

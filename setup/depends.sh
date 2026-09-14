@@ -41,8 +41,12 @@ done
 #   debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password your_password'
 # fi
 
-python_version="$(python -c 'import platform; major, minor, patch = platform.python_version_tuple(); print(major);')"
-python3_version="$(python3 -c 'import platform; major, minor, patch = platform.python_version_tuple(); print(major);')"
+python3_version="$(python3 -c 'import platform; major, minor, patch = platform.python_version_tuple(); print("%s.%s" % (major, minor));')"
+
+if [[ "$(printf '3.12\n%s\n' "$python3_version" | sort -V | head -1)" != "3.12" ]]; then
+  echo "[!] Python 3.12 or newer is required, found $python3_version"
+  exit 1
+fi
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
   echo -e "\t#########################"
@@ -59,14 +63,8 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
   apt-get update
 
   echo "[*] Installing pip/gcc..."
-  if [[ "$python_version" == "2" ]]; then
-      echo "[*] Installing Python 2.x depends..."
-      apt-get install python-pip python-dev python-mysqldb python-mysqldb-dbg python-pycurl $SKIP
-  fi
-  if [[ "$python3_version" == "3" ]]; then
-      echo "[*] Installing Python 3.x depends..."
-      apt-get install python3-pip python3-dev python3-mysqldb python3-mysqldb-dbg python3-pycurl $SKIP
-  fi
+  echo "[*] Installing Python 3.x depends..."
+  apt-get install python3-pip python3-dev python3-mysqldb python3-mysqldb-dbg python3-pycurl $SKIP
 
   echo "[*] Installing common packages..."
   apt-get install build-essential zlib1g-dev memcached rustc $SKIP
@@ -101,18 +99,10 @@ fi
 echo "[*] Installing python libs..."
 
 #sh "$current_path/python-depends.sh"
-if [[ "$python_version" == "2" ]]; then
-    for line in $(cat "$current_path/requirements.txt")
-    do
-      pip install $line --upgrade
-    done
-fi
-if [[ "$python3_version" == "3" ]]; then
-    for line in $(cat "$current_path/requirements.txt")
-    do
-      pip3 install $line --upgrade
-    done
-fi
+for line in $(cat "$current_path/requirements.txt")
+do
+  pip3 install $line --upgrade
+done
 
 echo ""
 echo "[*] Setup Completed."

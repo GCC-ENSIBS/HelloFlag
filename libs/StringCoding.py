@@ -22,7 +22,6 @@ Created on Jul 14, 2018
 
 
 import codecs
-import sys
 from base64 import b64decode, b64encode
 
 
@@ -60,13 +59,6 @@ def decode(s, name="utf-8", *args, **kwargs):
     return rv
 
 
-def unicode(s, name="utf-8", *args, **kwargs):
-    # used in python2 to return a unicode type from string
-    codec = codecs.lookup(name)
-    rv, length = codec.decode(s, *args, **kwargs)
-    return rv
-
-
 def set_type(value, basevalue):
     # try to set value to basevalue type
     basetype = type(basevalue)
@@ -79,8 +71,8 @@ def set_type(value, basevalue):
             return False
     elif isinstance(basevalue, int):
         return int(value)
-    elif type(unicode(value)) == basetype:
-        return unicode(value)
+    elif basetype is str and isinstance(value, (bytes, bytearray)):
+        return decode(value)
     elif type(str(value)) == basetype:
         return str(value)
     elif type(bytes(value)) == basetype:

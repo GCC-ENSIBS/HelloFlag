@@ -44,7 +44,7 @@ See the [Root the Box Wiki](https://github.com/moloch--/RootTheBox/wiki)
 
 ## Platform Requirements
 
--   [Python 3](https://www.python.org/), [PyPy](http://pypy.org/) or [Docker](https://github.com/moloch--/RootTheBox/wiki/Docker-Deployment).
+-   [Python 3.12+](https://www.python.org/) or [Docker](https://github.com/moloch--/RootTheBox/wiki/Docker-Deployment).
 -   Install scripts are for [Ubuntu](http://www.ubuntu.com/) >= 18.04 (or [Debian](https://www.debian.org/)) but the application should work on any recent Linux, BSD, MacOS, or Windows system.
 
 ## Questions? Problems? Feature Requests?
