@@ -1,0 +1,135 @@
+{% extends "../main.html" %}
+
+{% block title %}{{ _("Home Page") }}{% end %}
+
+{% block header %}
+<link rel="stylesheet" href="/static/css/markdown-toolbar.css" type="text/css" />
+<script src="/static/js/libs/commonmark.min.js"></script>
+<script src="/static/js/libs/markdown-toolbar.js"></script>
+<script src="/static/js/pages/admin/home_page.js"></script>
+{% end %}
+
+{% block content %}
+{% from libs.ConfigHelpers import config_image %}
+<form class="form-horizontal" action="/admin/homepage" method="post" enctype="multipart/form-data">
+    {% raw xsrf_form_html() %}
+    <div class="hf-page-head">
+        <div>
+            <h1><i class="fa fa-home"></i> {{ _("Home Page") }}</h1>
+            <p class="hf-sub">{{ _("Customize the welcome page and the game identity.") }}</p>
+        </div>
+        <div class="hf-page-actions">
+            <button class="btn btn-primary" type="submit">{{ _("Update Home Page") }}</button>
+        </div>
+    </div>
+
+    {% if errors is not None and len(errors) != 0 %}
+        {% for error in errors %}
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            <h4 class="alert-heading">{{ _("ERROR") }}</h4>
+            {{ error }}
+        </div>
+        {% end %}
+    {% end %}
+
+    <div class="hf-card">
+        <div class="hf-card-head"><h3>{{ _("Images") }}</h3></div>
+        <div class="control-group">
+            <label class="control-label" for="game_icon">{{ _("Game Icon") }}</label>
+            <div class="controls">
+                {% if config_image("game_icon") %}
+                <img class="hf-avatar hf-config-icon" src="{{ config_image('game_icon') }}" alt="" />
+                {% end %}
+                {% if config.game_icon %}
+                <label class="hf-check">
+                    <input type="checkbox" name="game_icon_clear" value="true" />
+                    {{ _("Remove the current icon") }}
+                </label>
+                {% end %}
+                <input id="game_icon" name="game_icon" type="file"
+                    accept="image/bmp,image/jpeg,image/gif,image/png" />
+                <span class="help-block">
+                    {{ _("Shown next to the game name, in place of its initial.") }}
+                    {{ _("Uploading a new image replaces and deletes the current one.") }}
+                    {% if not config.game_icon %}
+                    {{ _("Currently using the default static/images/icon.png.") }}
+                    {% end %}
+                </span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="home_background">{{ _("Background Image") }}</label>
+            <div class="controls">
+                {% if config_image("home_background") %}
+                <img class="hf-avatar hf-config-preview" src="{{ config_image('home_background') }}" alt="" />
+                {% end %}
+                {% if config.home_background %}
+                <label class="hf-check">
+                    <input type="checkbox" name="home_background_clear" value="true" />
+                    {{ _("Remove the current background") }}
+                </label>
+                {% end %}
+                <input id="home_background" name="home_background" type="file"
+                    accept="image/bmp,image/jpeg,image/gif,image/png" />
+                <span class="help-block">
+                    {{ _("Used behind the content area, on the welcome page and once logged in.") }}
+                    {{ _("Uploading a new image replaces and deletes the current one.") }}
+                    {% if not config.home_background %}
+                    {{ _("Currently using the default static/images/home-background.png.") }}
+                    {% end %}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="hf-card">
+        <div class="hf-card-head"><h3>{{ _("Content") }}</h3></div>
+        <div class="control-group">
+            <label class="control-label" for="home_markdown">{{ _("Welcome Page Content") }}</label>
+            <div class="controls">
+                <textarea class="toolbar" id="home_markdown" name="home_markdown" rows="10"
+                    placeholder="{{ _('Optional') }} Markdown">{{ "\n".join(config.home_markdown) }}</textarea>
+                <span class="help-block">{{ _("Supports") }} Markdown (GitHub Style). {{ _("Replaces the default tagline.") }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="hf-card">
+        <div class="hf-card-head"><h3>{{ _("Buttons") }}</h3></div>
+        <div class="control-group">
+            <label class="control-label">{{ _("Login Button") }}</label>
+            <div class="controls">
+                <input id="home-show-login" name="home_show_login" type="hidden"
+                    value="{{ str(config.home_show_login).lower() }}" />
+                <div id="home-show-login-button" class="btn-group" data-toggle="buttons-radio">
+                    <button id="home-show-login-enable" type="button" class="btn btn-success">
+                        <i id="home-show-login-enable-icon" class="fa fa-fw fa-square-o"></i>{{ _("Enable") }}
+                    </button>
+                    <button id="home-show-login-disable" type="button" class="btn btn-danger">
+                        <i id="home-show-login-disable-icon" class="fa fa-fw fa-square-o"></i>{{ _("Disable") }}
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">{{ _("Scoreboard Button") }}</label>
+            <div class="controls">
+                <input id="home-show-scoreboard" name="home_show_scoreboard" type="hidden"
+                    value="{{ str(config.home_show_scoreboard).lower() }}" />
+                <div id="home-show-scoreboard-button" class="btn-group" data-toggle="buttons-radio">
+                    <button id="home-show-scoreboard-enable" type="button" class="btn btn-success">
+                        <i id="home-show-scoreboard-enable-icon" class="fa fa-fw fa-square-o"></i>{{ _("Enable") }}
+                    </button>
+                    <button id="home-show-scoreboard-disable" type="button" class="btn btn-danger">
+                        <i id="home-show-scoreboard-disable-icon" class="fa fa-fw fa-square-o"></i>{{ _("Disable") }}
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button class="btn btn-primary" type="submit">{{ _("Update Home Page") }}</button>
+        </div>
+    </div>
+</form>
+{% end %}

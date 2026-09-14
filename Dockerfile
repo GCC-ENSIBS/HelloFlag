@@ -3,16 +3,17 @@
 #  Dockerfile for Root the Box
 #  v0.1.3 - By Moloch, ElJeffe
 
-FROM python:3.8
+FROM python:3.13
 
 RUN apt-get update && apt-get install -y \
-build-essential zlib1g-dev rustc \
+build-essential zlib1g-dev rustc pkg-config \
+default-libmysqlclient-dev default-mysql-client \
 python3-pycurl sqlite3 libsqlite3-dev
 
 ADD ./setup/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt --upgrade
 
-ENV SQL_DIALECT=sqlite
+ENV SQL_DIALECT=mysql
 
 RUN mkdir /opt/rtb
 ADD . /opt/rtb

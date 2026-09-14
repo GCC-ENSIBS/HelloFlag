@@ -35,6 +35,14 @@ $(document).ready(function() {
         });
     }
 
+    // the server sends the legacy image path, the toast shows a fontawesome icon
+    function iconClass(iconUrl) {
+        if (iconUrl.indexOf("success") !== -1) { return "fa-check-circle"; }
+        if (iconUrl.indexOf("warning") !== -1) { return "fa-exclamation-triangle"; }
+        if (iconUrl.indexOf("error") !== -1) { return "fa-times-circle"; }
+        return "fa-info-circle";
+    }
+
     var Notifier = window.Notifier = {};
 
     Notifier.notify = function(message, title, iconUrl, timeOut) {
@@ -47,11 +55,11 @@ $(document).ready(function() {
                 float: 'left',
                 padding: '0 10px 5px 0'
             });
-            var iconElement = $("<img/>", {
-                src: iconUrl,
+            var iconElement = $("<i/>", {
+                "class": "fa " + iconClass(iconUrl),
                 css: {
-                    width: 30,
-                    height: 30,
+                    fontSize: 22,
+                    lineHeight: "30px",
                     verticalAlign: "middle"
                 }
             });

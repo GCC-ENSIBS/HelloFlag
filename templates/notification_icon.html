@@ -1,0 +1,11 @@
+{# fontawesome icon for a notification, picked from the image the model stored #}
+{% set icon = notify.icon_url or "" %}
+{% if "success" in icon %}
+    <i class="fa fa-check-circle hf-alert-icon hf-alert-icon-ok"></i>
+{% elif "warning" in icon %}
+    <i class="fa fa-exclamation-triangle hf-alert-icon hf-alert-icon-warn"></i>
+{% elif "error" in icon %}
+    <i class="fa fa-times-circle hf-alert-icon hf-alert-icon-danger"></i>
+{% else %}
+    <i class="fa fa-info-circle hf-alert-icon hf-alert-icon-info"></i>
+{% end %}

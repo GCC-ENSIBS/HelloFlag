@@ -1,0 +1,37 @@
+{# avatar picker modal: `modal_id`, `modal_title`, `post_url`, `field`, `pick_class`, `submit_id`, `avatars`, `existing` #}
+<div id="{{ modal_id }}" class="modal modal-wide hide fade" style="display: none;">
+    <div class="modal-header">
+        <h3>{{ modal_title }}</h3>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+    </div>
+    <form action="{{ post_url }}" method="post" enctype="multipart/form-data">
+        {% raw xsrf_form_html() %}
+        <div class="modal-body">
+            <div class="control-group">
+                <label class="control-label" for="{{ field }}">{{ _("Upload Avatar File") }} &mdash; w500 x h250</label>
+                <div class="controls">
+                    <input type="file" name="{{ field }}" id="{{ field }}" accept="image/bmp,image/jpeg,image/gif,image/png" />
+                    <input type="hidden" name="{{ field }}_select" id="{{ field }}_select" />
+                </div>
+            </div>
+            {% if len(avatars) > 0 %}
+            <div class="hf-inline">
+                <span class="hf-legend">{{ _("Or Choose Existing") }}</span>
+            </div>
+            <p class="help-block"><i class="fa fa-certificate"></i> {{ _("indicates use by another player") }}</p>
+            <div class="hf-grid hf-grid-auto hf-avatar-picker">
+                {% for avatar in avatars %}
+                <a href="#" class="{{ pick_class }} hf-avatar-option" value="{{ avatar }}">
+                    {% if avatar in existing %}<i class="fa fa-certificate avatarused"></i>{% end %}
+                    <img src="/avatars/{{ avatar }}" class="hf-avatar" alt="" />
+                </a>
+                {% end %}
+            </div>
+            {% end %}
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">{{ _("Close") }}</a>
+            <button id="{{ submit_id }}" class="btn btn-primary" type="submit">{{ _("Submit") }}</button>
+        </div>
+    </form>
+</div>

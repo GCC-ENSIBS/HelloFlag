@@ -21,12 +21,8 @@ function barcolor() {
     });
     
     $(".minibar").each(function() {
-        if (this.style.width == "100%") {
-            $(this).css('background-color', "#00bb00");
-            $(this).css('background-image', 'linear-gradient(to bottom,#00bb00,#009900)')
-        } else {
-            $(this).css('background-color', "#eeee00");
-            $(this).css('background-image', 'linear-gradient(to bottom,#eeee00,#b3b300)');
-        }
+        // let the active theme pick the colours, see .minibar-full / .minibar-partial
+        var full = this.style.width == "100%";
+        $(this).toggleClass('minibar-full', full).toggleClass('minibar-partial', !full);
     });
 }

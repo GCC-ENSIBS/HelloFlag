@@ -43,17 +43,9 @@ import struct
 import sys
 import traceback
 import uuid
-from builtins import str
 
-try:
-    import ConfigParser
-except ImportError:
-    import configparser as ConfigParser
-try:
-    from urllib.parse import urlparse
-except ImportError:
-    from urlparse import urlparse
-from builtins import chr, object, range
+import configparser as ConfigParser
+from urllib.parse import urlparse
 from datetime import datetime
 from hashlib import sha1, sha512
 
@@ -288,7 +280,11 @@ def decode(s, name="utf-8", *args, **kwargs):
 
 class _SSLSocketWrapper(object):
     def __init__(self, sock):
-        self.ssl = ssl.wrap_socket(sock, ssl_version=ssl.PROTOCOL_TLSv1_2)
+        context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+        context.minimum_version = ssl.TLSVersion.TLSv1_2
+        context.check_hostname = False
+        context.verify_mode = ssl.CERT_NONE
+        self.ssl = context.wrap_socket(sock)
 
     def recv(self, bufsize):
         return self.ssl.read(bufsize)
@@ -983,7 +979,7 @@ def get_default_garbage():
 
 def main(domain, port, user, garbage_path, secure, verbose):
     """Main()"""
-    garbage_cfg = ConfigParser.SafeConfigParser()
+    garbage_cfg = ConfigParser.ConfigParser()
     if garbage_path is None:
         garbage_path = get_default_garbage()
     if not os.path.exists(garbage_path):
@@ -991,7 +987,7 @@ def main(domain, port, user, garbage_path, secure, verbose):
         os._exit(1)
     fp = open(garbage_path, "r")
     try:
-        garbage_cfg.readfp(fp)
+        garbage_cfg.read_file(fp)
     except:
         print(WARN + " Garbage file is not properly formatted")
         os._exit(2)

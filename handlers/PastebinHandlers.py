@@ -38,7 +38,7 @@ class PasteHandler(BaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
-        if options.team_sharing:
+        if options.team_sharing and options.use_pastebin:
             """Renders the main page for PasteBin"""
             self.render("pastebin/view.html", user=self.get_current_user())
         else:
@@ -51,7 +51,7 @@ class CreatePasteHandler(BaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
-        if options.team_sharing:
+        if options.team_sharing and options.use_pastebin:
             """AJAX // Display team text shares"""
             self.render(
                 "pastebin/create.html", errors=None, user=self.get_current_user()
@@ -61,7 +61,7 @@ class CreatePasteHandler(BaseHandler):
 
     @authenticated
     def post(self, *args, **kwargs):
-        if options.team_sharing:
+        if options.team_sharing and options.use_pastebin:
             """Creates a new text share"""
             name = self.get_argument("name", "")
             content = self.get_argument("content", "")
@@ -103,7 +103,7 @@ class DisplayPasteHandler(BaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
-        if options.team_sharing:
+        if options.team_sharing and options.use_pastebin:
             """AJAX // Retrieves a paste from the database"""
             paste_uuid = self.get_argument("paste_uuid", "")
             user = self.get_current_user()
@@ -128,7 +128,7 @@ class DeletePasteHandler(BaseHandler):
 
     @authenticated
     def post(self, *args, **kwargs):
-        if options.team_sharing:
+        if options.team_sharing and options.use_pastebin:
             """AJAX // Delete a paste object from the database"""
             paste = PasteBin.by_uuid(self.get_argument("uuid", ""))
             user = self.get_current_user()

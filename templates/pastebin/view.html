@@ -7,38 +7,35 @@
 {% end %}
 
 {% block content %}
-    <form id="delete-paste-form" method="post" action="/user/share/pastebin/delete" >
-        {% raw xsrf_form_html() %}
-        <input id="delete-paste-uuid" name="uuid" type="hidden" value="" />
-    </form>
-    <div class="row-fluid">
-        <div class="span3">
-          <div class="well sidebar-nav">
-            <ul class="nav nav-list">
-                <li class="nav-header">{{ _("Team Shares") }}</li>
-                {% if user.team.pastes != 0 %}
-                    {% for index, paste in enumerate(user.team.pastes) %}
-                        <li>
-                            <a id="view-paste{{ index }}" data-uuid="{{ paste.uuid }}" href="#">
-                                {{ paste.name }}
-                            </a>
-                        </li>
-                    {% end %}
-                {% else %}
-                    <li><a href="#">{{ _("EMPTY") }}</a></li>
-                {% end %}
-            </ul>
-          </div><!--/.well -->
-        </div><!--/span-->
-        <div id="display-paste" class="span9">
-            <div class="navbar navbar-inverse">
-                <div class="navbar-inner">
-                    <a class="brand">{{ _("PasteBin") }}</a>
-                    <ul class="nav">
-                        <li><a id="create-paste" href="#">{{ _("Create") }}</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div><!--/span-->
+<form id="delete-paste-form" method="post" action="/user/share/pastebin/delete">
+    {% raw xsrf_form_html() %}
+    <input id="delete-paste-uuid" name="uuid" type="hidden" value="" />
+</form>
+<div class="hf-page-head">
+    <h1><i class="fa fa-clipboard"></i> {{ _("PasteBin") }}</h1>
+    <div class="hf-page-actions">
+        <a id="create-paste" class="btn btn-primary" href="#"><i class="fa fa-plus"></i>{{ _("Create") }}</a>
     </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-lg-3">
+    <aside class="hf-card hf-card-flush">
+        <div class="hf-card-head"><h3>{{ _("Team Shares") }}</h3></div>
+        <ul class="hf-list">
+            {% if user.team and len(user.team.pastes) %}
+                {% for index, paste in enumerate(user.team.pastes) %}
+                <li><a id="view-paste{{ index }}" data-uuid="{{ paste.uuid }}" href="#">{{ paste.name }}</a></li>
+                {% end %}
+            {% else %}
+                <li class="hf-list-empty">{{ _("EMPTY") }}</li>
+            {% end %}
+        </ul>
+    </aside>
+    </div>
+    <div class="col-xs-12 col-lg-9">
+        <div id="display-paste">
+            <div class="hf-empty">{{ _("Select a paste, or create a new one") }}</div>
+        </div>
+    </div>
+</div>
 {% end %}

@@ -11,19 +11,13 @@ import json
 import logging
 import os
 import re
-import sys
-
-if sys.version_info.major >= 3 and sys.version_info.minor >= 10:
-    from collections.abc import MutableMapping
-else:
-    from collections import MutableMapping
+from collections.abc import MutableMapping
 
 try:
     import bmemcached as memcache
 except ImportError:
     import memcache
 
-from builtins import str
 from datetime import datetime, timedelta
 
 from tornado.options import options
@@ -175,7 +169,7 @@ class MemcachedSession(BaseSession):
     @staticmethod
     def _parse_connection_details(details):
         if len(details) > 12:
-            return re.sub("\s+", "", details[12:]).split(",")
+            return re.sub(r"\s+", "", details[12:]).split(",")
         else:
             return ["127.0.0.1"]
 

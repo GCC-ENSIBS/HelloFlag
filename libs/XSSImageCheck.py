@@ -16,7 +16,6 @@ import os
 from random import randint, sample
 from string import printable
 from pathlib import Path
-import imghdr
 
 from PIL import Image
 from resizeimage import resizeimage
@@ -29,8 +28,23 @@ MIN_AVATAR_SIZE = 64
 IMG_FORMATS = ["png", "jpeg", "jpg", "gif", "bmp"]
 IMG_SIZE = [500, 250]
 
+def image_format(data):
+    """Return the image format of a byte buffer, replaces the removed imghdr"""
+    header = bytes(data[:32])
+    if header.startswith(b"\x89PNG\r\n\x1a\n"):
+        return "png"
+    if header.startswith(b"\xff\xd8"):
+        return "jpeg"
+    if header.startswith((b"GIF87a", b"GIF89a")):
+        return "gif"
+    if header.startswith(b"BM"):
+        return "bmp"
+    if header[:4] == b"RIFF" and header[8:12] == b"WEBP":
+        return "webp"
+    return None
+
+
 def is_xss_image(data):
-    # str(char) works here for both py2 & py3
     return all([str(char) in printable for char in data[:16]])
 
 
@@ -109,7 +123,7 @@ def avatar_validation(image_data) -> str:
     Returns image extension as str if checks pass
     """
     if MIN_AVATAR_SIZE < len(image_data) < MAX_AVATAR_SIZE:
-        ext = imghdr.what("", h=image_data)
+        ext = image_format(image_data)
         if ext in IMG_FORMATS and not is_xss_image(image_data):
             verify_image_size(image_data)                                
             return ext

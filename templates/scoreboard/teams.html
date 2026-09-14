@@ -4,183 +4,149 @@
 <script src="/static/js/pages/missions/view.js"></script>
 <script src="/static/js/pages/scoreboard/teams.js"></script>
 <script src="/static/js/pages/anchor.js"></script>
-<link href="/static/css/pages/public/summary.css" rel="stylesheet" />
 {% end %}
+
 {% block title %}
 {% from tornado.options import options %}
 {% if options.teams %}{{ _("Teams") }}{% else %}{{ _("Players") }}{% end %}
 {% end %}
 
 {% block content %}
+{% from tornado.options import options %}
 {% from math import ceil %}
-{% from models.Team import Team %}
 {% from models.GameLevel import GameLevel %}
 
-<div class="row-fluid">
-    {% if not hide_scoreboard %}
-    <div class="span2" />
-        <ul id="navWrapper" class="nav nav-tabs nav-stacked affix well">
-            <center>
-                <strong>
-                    <i class="fa fa-group"></i>
-                    {% if options.teams %}{{ _("Teams") }}{% else %}{{ _("Players") }}{% end %}
-                </strong>
-            </center>
-            <br />
-            {% for t_index, team in enumerate(teams) %}
-                {% set rank = page * display - display + t_index + 1 %}
-                <li>
-                    <a href="#{{ team.uuid }}">
-                        <i class="icon-chevron-right"></i>
-                        &nbsp;&nbsp;#{{ rank }} - {{ team.name }}
-                    </a>
-                </li>
-            {% end %}
-        </ul>
-    </div>
-
-    <div class="span10">
-        <div style="float:right; margin-top: -15px;">
-            {% if teamcount > 0 %}
-                {% set pcount = int(ceil(teamcount / float(display))) %}
-                
-                <div class="pagination" style="padding: 5px; margin-right: 75px">
-                    <ul>
-                        {% if pcount > 1 %}
-                        <li {%if page==1 %}class="disabled" {%end%}><a {%if page !=1 %}href="?count={{display}}&page={{page-1}}"
-                                {%end%}>Prev</a></li>
-                            {% for x in range(max(1,page-4), min(pcount+1, max(page+5, 10))) %}
-                            <li {%if page==x %}class="active" {%end%}><a {%if page !=x %}href="?count={{display}}&page={{x}}"
-                                    {%end%}>{{x}}</a></li>
-                            {% end %}
-                        <li {%if page==pcount %}class="disabled" {%end%}><a {%if page !=pcount
-                                %}href="?count={{display}}&page={{page+1}}" {%end%}>Next</a></li>
-                        {% end %}
-                        <li class="disabled">
-                            <a>&nbsp;{% if options.teams %}{{ _("Teams") }}{% else %}{{ _("Players") }}{% end %} {{ _("per page") }}</a>
-                        </li>
-                        <li>
-                            <select id="page_count" style="width: 80px;">
-                                {% if display!= 10 and display!=25 and display!=50 and display!=100 and display!=250 %}
-                                    <option value={{display}} selected>{{display}}</option>
-                                {%end%}
-                                <option value=10{% if display==10 %} selected{%end%}>10</option>
-                                <option value=25{% if display==25 %} selected{%end%}>25</option>
-                                <option value=50{% if display==50 %} selected{%end%}>50</option>
-                                <option value=100{% if display==100 %} selected{%end%}>100</option>
-                                <option value=250{% if display==250 %} selected{%end%}>250</option>
-                            </select>
-                        </li>
-                    </ul>
-                </div>
-            {% end %}
-        </div>
-        {% if timer %}
-        <h3 id="timercount" title="Scoreboard Countdown" style="float: right; color: red; margin-right: 100px;"></h3>
-        {% end %}
-        <h1 class="offset1">
-            <i class="fa fa-group"></i>
-            {% if options.teams %}{{ _("Teams") }}{% else %}{{ _("Players") }}{% end %}
-        </h1>
-        <br />
-        {% for t_index, team in enumerate(teams) %}
-            {% set rank = page * display - display + t_index + 1 %}
-            <div id="{{ team.uuid }}" class="container" align="middle">
-                <h2 style="display:inline;">
-                    {% if rank == 1 %}
-                        <i class="fa fa-trophy"></i> - {{ team.name }}
-                    {% else %}
-                        #{{ rank }} - {{ team.name }}
+{% if not hide_scoreboard %}
+<div class="hf-page-head">
+    <h1><i class="fa fa-group"></i> {% if options.teams %}{{ _("Teams") }}{% else %}{{ _("Players") }}{% end %}</h1>
+    <div class="hf-page-actions">
+        {% if timer %}<h3 id="timercount" class="hf-timer" title="{{ _('Scoreboard Countdown') }}"></h3>{% end %}
+        {% if teamcount > 0 %}
+            {% set pcount = int(ceil(teamcount / float(display))) %}
+            <div class="pagination">
+                <ul>
+                    {% if pcount > 1 %}
+                    <li {% if page == 1 %}class="disabled"{% end %}><a {% if page != 1 %}href="?count={{ display }}&page={{ page - 1 }}"{% end %}>{{ _("Prev") }}</a></li>
+                    {% for x in range(max(1, page - 4), min(pcount + 1, max(page + 5, 10))) %}
+                    <li {% if page == x %}class="active"{% end %}><a {% if page != x %}href="?count={{ display }}&page={{ x }}"{% end %}>{{ x }}</a></li>
                     {% end %}
-                </h2>
-                {% if team.motto != "" %}<h4 style="display:inline;">&nbsp;&nbsp;&nbsp;&nbsp;"{{ team.motto }}"</h4>{% end %}
-                <br>
-                <img src="/avatars/{{ team.avatar }}" class="img-polaroid" align="middle" />
-                <!--<hr /> -->
-                {% if options.teams %}
-                    <div class="row">
-                        <div class="container">
-                            {% for user in team.members %}
-                                {% if not user.locked %}
-                                    <div class="span2" align="middle">
-                                        <a href="/user?id={{user.uuid}}">
-                                            <h5>{{ user.handle }}</h5>
-                                            <img src="/avatars/{{ user.avatar }}" class="img-polaroid" align="middle" />
-                                        </a>
-                                    </div>
-                                {% end %}
-                            {% end %}
-                        </div>
-                </div>
-                {% end %}
-                <div class="row">
-                    <div class="container">
-                        <hr />
-                        <div style="height: 8px; padding: 0px; margin-top: -8px; margin-bottom: 8px;">
-                                <div style="width: 100%; display: table;">
-                                    <div style="display: table-row; ">
-                                        {% set gamelevels = GameLevel.all() %}
-                                        {% for g_index, level in enumerate(gamelevels) %}
-                                            {% if len(level.unlocked_boxes()) > 0 %}
-                                                {% if g_index> 0 %}
-                                                    <div class="summarycolumn" style="display: table-cell; width: 10px;"></div>
-                                                {% end %}
-                                                <div class="summarycolumn" style="display: table-cell;">
-                                                    {% if len(gamelevels) > 1 %}
-                                                        {% if level.type == 'none' or not team or level in team.game_levels %}
-                                                            <i class="fa fa-unlock-alt" style="font-size: small; float:left; padding-right: 4px; margin-top: -3px;"></i>
-                                                        {% else %}
-                                                            <i class="fa fa-lock" style="color: #424242; font-size: small; float:left; padding-right: 4px; margin-top: -3px;"></i>
-                                                        {% end %}
-                                                    {% end %}
-                                                    <div class="progress" style="height: 8px; margin-bottom: 8px; background-color: #424242;" title="{% if len(GameLevel.all()) > 1 %}{{ level.name }} &ndash; {% end %}{% if len(team.level_flags(level.number)) != 0 %}{{ int(( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100) }}%{% else %}0%{% end %}">
-                                                        {% if len(team.level_flags(level.number)) != 0 %}
-                                                            <div class="bar minibar" style="width: {{ ( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100.0 }}%;"></div>
-                                                        {% else %}
-                                                            <div class="bar minibar" style="width: 0%;"></div>
-                                                        {% end %}
-                                                    </div>
-                                                </div>
-                                            {% end %}
-                                        {% end %}
-                                    </div>
-                                </div>
-                        </div>
-                        {% if len(team.flags) %}
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>{{ _("Flag") }}</th>
-                                        <th>{{ _("Box") }}</th>
-                                        {% if len(GameLevel.all()) > 1 %}<th>{{ _("Game Level") }}</th>{% end %}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for f_index, flag in enumerate(team.flags) %}
-                                        <tr>
-                                            <td>{{ f_index + 1 }}</td>
-                                            <td>{{ flag.name }}</td>
-                                            <td>{{ flag.box.name }}</td>
-                                            {% if len(GameLevel.all()) > 1 %}<td>{{ flag.game_level.name }}</td>{% end %}
-                                        </tr>
-                                    {% end %}
-                                </tbody>
-                            </table>
-                        {% else %}
-                            <p>
-                                <h4 style="text-align:center;">{{ _("No flags captured yet.") }}</h4>
-                            </p>
-                        {% end %}
-                        <br/>
-                    </div>
-                </div>
+                    <li {% if page == pcount %}class="disabled"{% end %}><a {% if page != pcount %}href="?count={{ display }}&page={{ page + 1 }}"{% end %}>{{ _("Next") }}</a></li>
+                    {% end %}
+                </ul>
+            </div>
+            <div class="hf-inline">
+                <select id="page_count" class="hf-pagesize">
+                    {% if display not in (10, 25, 50, 100, 250) %}
+                    <option value="{{ display }}" selected>{{ display }}</option>
+                    {% end %}
+                    <option value="10"{% if display == 10 %} selected{% end %}>10</option>
+                    <option value="25"{% if display == 25 %} selected{% end %}>25</option>
+                    <option value="50"{% if display == 50 %} selected{% end %}>50</option>
+                    <option value="100"{% if display == 100 %} selected{% end %}>100</option>
+                    <option value="250"{% if display == 250 %} selected{% end %}>250</option>
+                </select>
+                <span class="help-block">{% if options.teams %}{{ _("Teams") }}{% else %}{{ _("Players") }}{% end %} {{ _("per page") }}</span>
             </div>
         {% end %}
-        <br>
     </div>
-    {% else %}
-        <h1 id="timercount_hidescoreboard" class="timercount"></h1>
-    {% end %}
 </div>
+
+<div class="row">
+    <div class="col-xs-12 col-lg-3">
+    <aside class="hf-card hf-card-flush">
+        <div class="hf-card-head">
+            <h3><i class="fa fa-group"></i> {% if options.teams %}{{ _("Teams") }}{% else %}{{ _("Players") }}{% end %}</h3>
+        </div>
+        <ul id="navWrapper" class="hf-list">
+            {% for t_index, team in enumerate(teams) %}
+            {% set rank = page * display - display + t_index + 1 %}
+            <li><a href="#{{ team.uuid }}">#{{ rank }} &middot; {{ team.name }}</a></li>
+            {% end %}
+        </ul>
+    </aside>
+    </div>
+
+    <div class="col-xs-12 col-lg-9">
+        <div class="hf-stack">
+            {% for t_index, team in enumerate(teams) %}
+            {% set rank = page * display - display + t_index + 1 %}
+            <section id="{{ team.uuid }}" class="hf-card">
+                <div class="hf-card-head">
+                    <div class="hf-inline">
+                        {% if rank == 1 %}<i class="fa fa-trophy"></i>{% else %}<span class="hf-rank">#{{ rank }}</span>{% end %}
+                        <h3>{{ team.name }}</h3>
+                        {% if team.motto != "" %}<span class="hf-level-desc">&ldquo;{{ team.motto }}&rdquo;</span>{% end %}
+                    </div>
+                    <span class="hf-tag hf-tag-mono">{{ len(team.flags) }} <i class="fa fa-flag-o"></i></span>
+                </div>
+
+                <div class="hf-teamgrid">
+                    <img class="hf-avatar hf-teamavatar" src="/avatars/{{ team.avatar }}" alt="" />
+                    {% if options.teams %}
+                    <div class="hf-grid hf-grid-auto hf-members">
+                        {% for user in team.members %}
+                            {% if not user.locked %}
+                            <a class="hf-member" href="/user?id={{ user.uuid }}">
+                                <span class="hf-member-name">{{ user.handle }}</span>
+                            </a>
+                            {% end %}
+                        {% end %}
+                    </div>
+                    {% end %}
+                </div>
+
+                <div class="hf-scorebars hf-mt">
+                    {% set gamelevels = GameLevel.all() %}
+                    {% for g_index, level in enumerate(gamelevels) %}
+                        {% if len(level.unlocked_boxes()) > 0 %}
+                        <div class="hf-scorebar" title="{% if len(gamelevels) > 1 %}{{ level.name }} &ndash; {% end %}{% if len(team.level_flags(level.number)) != 0 %}{{ int((len(team.level_flags(level.number)) / float(len(level.flags))) * 100) }}%{% else %}0%{% end %}">
+                            {% if len(gamelevels) > 1 %}
+                                {% if level.type == "none" or level in team.game_levels %}
+                                <i class="fa fa-unlock-alt"></i>
+                                {% else %}
+                                <i class="fa fa-lock"></i>
+                                {% end %}
+                            {% end %}
+                            <div class="progress minibar">
+                                <div class="bar minibar" style="width: {% if len(team.level_flags(level.number)) != 0 %}{{ (len(team.level_flags(level.number)) / float(len(level.flags))) * 100.0 }}{% else %}0{% end %}%;"></div>
+                            </div>
+                        </div>
+                        {% end %}
+                    {% end %}
+                </div>
+
+                {% if len(team.flags) %}
+                <div class="hf-scroll hf-mt">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>{{ _("Flag") }}</th>
+                                <th>{{ _("Box") }}</th>
+                                {% if len(GameLevel.all()) > 1 %}<th>{{ _("Game Level") }}</th>{% end %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for f_index, flag in enumerate(team.flags) %}
+                            <tr>
+                                <td>{{ f_index + 1 }}</td>
+                                <td>{{ flag.name }}</td>
+                                <td>{{ flag.box.name }}</td>
+                                {% if len(GameLevel.all()) > 1 %}<td>{{ flag.game_level.name }}</td>{% end %}
+                            </tr>
+                            {% end %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="hf-empty hf-mt">{{ _("No flags captured yet.") }}</div>
+                {% end %}
+            </section>
+            {% end %}
+        </div>
+    </div>
+</div>
+{% else %}
+<h1 id="timercount_hidescoreboard" class="timercount"></h1>
+{% end %}
 {% end %}

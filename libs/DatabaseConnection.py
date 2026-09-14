@@ -26,14 +26,9 @@ import getpass
 import logging
 import os
 import sys
-from builtins import object
+from urllib.parse import quote, quote_plus
 
 from libs.ConsoleColors import *
-
-try:
-    from urllib.parse import quote, quote_plus
-except ImportError:
-    from urllib import quote, quote_plus
 from sqlalchemy import create_engine
 from tornado.options import options
 
@@ -179,6 +174,8 @@ class DatabaseConnection(object):
         elif self.password == "ENV":
             self.password = os.environ["sql_password"]
         db_host = quote(self.hostname)
+        if self.port and ":" not in db_host:
+            db_host = "%s:%s" % (db_host, self.port)
         db_name = quote(self.database)
         db_user = quote(self.username)
         db_password = quote_plus(self.password)

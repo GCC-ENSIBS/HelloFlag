@@ -1,16 +1,10 @@
 {% extends "../../main.html" %}
 
-{% block title %}{{_("Registration Token")}}{% end %}
+{% block title %}{{ _("Registration Token") }}{% end %}
 
 {% block content %}
-<div class="container">
-    <br />
-    <br />
-    <br />
-    <h1>{{_("Token")}}: {{ token.getvalue() }}</h1>
-    <br />
-    <br />
-    <br />
+<div class="hf-card hf-status">
+    <p class="hf-eyebrow">{{ _("Token") }}</p>
+    <h1 class="mono">{{ token.getvalue() }}</h1>
 </div>
-<br />
 {% end %}

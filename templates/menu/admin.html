@@ -1,365 +1,183 @@
-{% block header %}
 <script src="/static/js/pages/menu/refresh.js" type="text/javascript"></script>
-<link href="/static/css/menu.css" rel="stylesheet" />
-{% end %}
 {% from tornado.options import options %}
-<div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container-fluid">
-            <a class="btn btncollapse" data-toggle="collapse" data-target=".nav-collapse">
-                <i class="fa fa-bars"></i>
-            </a>
-            <a class="brand" href="/">
-                {% if options.debug %}
-                    <i class="fa fa-fw fa-bug"></i>
-                    {{ _("DEBUG") }}
-                {% else %}
-                    {{ options.game_name }}
-                {% end %}
-            </a>
-            <div class="nav-collapse">
-                <ul class="nav">
-                    <li>
-                        <a href="/user">
-                            <i class="fa fa-fw fa-home" title="{{ _('Home') }}"></i>
-                        </a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-fw fa-plus"></i>
-                            {{ _("Create") }}
-                        <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="/admin/create/team">
-                                    <i class="fa fa-fw fa-group"></i>
-                                    {{ _("New Team") }}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/create/game_level">
-                                    <i class="fa fa-fw fa-level-up"></i>
-                                    {{ _("New Game Level") }}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/create/corporation">
-                                    <i class="fa fa-fw fa-building-o"></i>
-                                    {{ _("New Corporation") }}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/create/category">
-                                    <i class="fa fa-fw fa-th-large"></i>
-                                    {{ _("New Category") }}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/create/box">
-                                    <i class="fa fa-fw fa-desktop"></i>
-                                    {{ _("New Box") }}
-                                </a>
-                            </li>
-                            <li class="dropdown-submenu">
-                                <a tabindex="-1" href="#">
-                                    <i class="fa fa-fw fa-flag"></i>
-                                    {{ _("New Flag") }}
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="/admin/create/flag/static">
-                                            <i class="fa fa-fw fa-flag-o"></i>
-                                            {{ _("Static Flag") }}
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="/admin/create/flag/regex">
-                                            <i class="fa fa-fw fa-flag-o"></i>
-                                            {{ _("Regex Flag") }}
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="/admin/create/flag/datetime">
-                                            <i class="fa fa-fw fa-flag-o"></i>
-                                            {{ _("Datetime Flag") }}
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="/admin/create/flag/file">
-                                            <i class="fa fa-fw fa-flag-o"></i>
-                                            {{ _("File Flag") }}
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="/admin/create/flag/choice">
-                                            <i class="fa fa-fw fa-flag-o"></i>
-                                            {{ _("Multiple Choice Flag") }}
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-fw fa-eye"></i>
-                            {{ _("Game Management") }}
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="/admin/users">
-                                    <i class="fa fa-fw fa-group"></i>
-                                    {{ _("Users / Teams") }}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/view/game_objects">
-                                    <i class="fa fa-fw fa-bullseye"></i>
-                                    {{ _("Flags / Boxes / Corp.") }}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/view/categories">
-                                    <i class="fa fa-fw fa-th-large"></i>
-                                    {{ _("Categories") }}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/view/game_levels">
-                                    <i class="fa fa-fw fa-level-up"></i>
-                                    {{ _("Game Levels") }}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/view/market_objects">
-                                    <i class="fa fa-fw fa-shopping-cart"></i>
-                                    {{ _("Black Market") }}
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-fw fa-dashboard"></i>
-                            {{ _("Tools & Upgrades") }}
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu">
-                            {% for link in options.tool_links %}
-                                {% if link.get("name") and link.get("url") %}
-                                {% if not link.get("target") %}
-                                    {% set link["target"] = "_blank" %}
-                                {% end %}
-                                {% if link.get('name') == 'CyberChef' and (user.theme == 'Cyborg' or user.theme == 'Slate') %}
-                                    {% set theme="?theme=dark" %}
-                                {% else %}
-                                    {% set theme="" %}
-                                {% end %}
-                                <li>
-                                    <a href="{{ link.get('url') }}{{ theme }}" 
-                                        target="{{ link.get('target') }}">
-                                        <i class="fa fa-fw fa-link"></i>
-                                        {{ link.get('name') }}
-                                    </a>
-                                </li>
-                                {% end %}
-                            {% end %}
-                            <li>
-                                <a href="/admin/upgrades/source_code_market">
-                                    <i class="fa fa-fw fa-code"></i>
-                                    {{ _("Source Code Market") }}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/upgrades/swat">
-                                    <i class="fa fa-fw fa-crosshairs"></i>
-                                    {{ _("S.W.A.T.") }}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/materials">
-                                    <i class="fa fa-fw fa-folder-open-o"></i>
-                                    {{ _("Game Materials") }}
-                                </a>
-                            </li>
-                            {% if options.teams %}
-                            <li>
-                                <a href="/admin/view/fileshare">
-                                    <i class="fa fa-fw fa-files-o"></i>
-                                    {{ _("Team File Share") }}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/view/pastebin">
-                                    <i class="fa fa-fw fa-clipboard"></i>
-                                    {{ _("Team PasteBin") }}
-                                </a>
-                            </li>
-                            {% end %}
-                            {% if options.use_bots %}
-                            <li>
-                                <a href="/user/bots/webmonitor">
-                                    <i class="fa fa-fw fa-android"></i>
-                                    {{ _("Botnet Monitor") }}
-                                </a>
-                            </li>
-                            {% end %}
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-fw fa-save"></i>
-                            {{ _("Backup/Restore") }}
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="/admin/import/xml">
-                                    <i class="fa fa-fw fa-upload"></i>
-                                    {{ _("Import XML") }}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/export/xml">
-                                    <i class="fa fa-fw fa-download"></i>
-                                    {{ _("Export XML") }}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/reset">
-                                    <i class="fa fa-fw fa-undo"></i>
-                                    {{ _("Reset Game") }}
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-fw fa-gear"></i>
-                            {{ _("Configuration") }}
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="/admin/configuration">
-                                    <i class="fa fa-fw fa-gamepad"></i>
-                                    {{ _("Game") }}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/leds">
-                                    <i class="fa fa-fw fa-lightbulb-o"></i>
-                                    {{ _("LEDs") }}
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    {% if options.restrict_registration %}
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-fw fa-unlock"></i>
-                                {{ _("RegTokens") }}
-                                <b class="caret"></b>
-                            </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="/admin/regtoken/create">{{ _("Create") }}</a>
-                            </li>
-                            <li><a href="/admin/regtoken/view">{{ _("View") }} &amp; {{ _("Delete") }}</a>
-                            </li>
-                        </ul>
-                    </li>
-                    {% end %}
-                    {% if scoreboard_visible %}
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-fw fa-bar-chart-o"></i>
-                            {{ _("Scoreboard") }}
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="/scoreboard">
-                                    <i class="fa fa-fw fa-list"></i>
-                                    {{ _("Summary") }}
-                              </a>
-                            </li>
-                            <li>
-                                <a href="/scoreboard/history">
-                                    <i class="fa fa-fw fa-calendar"></i>
-                                    {{ _("Charts") }}
-                              </a>
-                            </li>
-                            {% if options.use_black_market %}
-                            <li>
-                                <a href="/scoreboard/wall_of_sheep">
-                                    <i class="fa fa-fw fa-key"></i>
-                                    {{ _("Wall of Sheep") }}
-                                </a>
-                            </li>
-                            {% end %}
-                            <li>
-                                <a href="/teams">
-                                    <i class="fa fa-fw fa-users"></i>
-                                    {% if options.teams %}{{ _("Teams") }}{% else %}{{ _("Players") }}{% end %}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/view/statistics">
-                                    <i class="fa fa-fw fa-star"></i>
-                                    {{ _("Statistics") }}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/scoreboard/feed">
-                                    <i class="fa fa-fw fa-rss"></i>
-                                    {{ _("Feed") }}
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    {% end %}
-                    {% if len(options.chat_url) > 0 %}
-                    <li>
-                        <a href="{{options.chat_url}}" rel="noopener noreferrer" target="_blank">
-                            <i class="fa fa-fw fa-comment" title="{{ _('Chat') }}"></i>
-                        </a>
-                    </li>
-                    {% end %}
-                </ul>
-                <div class="btn-group pull-right">
-                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-fw fa-user"></i>
-                        {{ user.handle }}
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="/user/settings">
-                                <i class="fa fa-fw fa-gears"></i>
-                                {{ _("Settings") }}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/about">
-                                <i class="fa fa-fw fa-info-circle"></i>
-                                {{ _("About") }}
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <form id="logout-form" action="/logout" method="post">
-                                {% raw xsrf_form_html() %}
-                            </form>
-                            <a id="logout" href="#">
-                                <i class="fa fa-fw fa-sign-out"></i>
-                                {{ _("Logout") }}
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div><!--/.nav-collapse -->
-        </div>
+<input type="checkbox" id="hf-nav-toggle" class="hf-nav-toggle" hidden>
+<aside class="hf-sidebar">
+    <div class="hf-sidebar-head">
+        <a class="hf-brand" href="/user">
+            {% include "../brand_mark.html" %}
+            <span class="hf-brand-name">{% if options.debug %}{{ _("DEBUG") }}{% else %}{{ options.game_name }}{% end %}</span>
+            <span class="hf-brand-tag">{{ _("Admin") }}</span>
+        </a>
+        <label for="hf-nav-toggle" class="hf-burger" title="{{ _('Menu') }}">
+            <i class="fa fa-bars"></i>
+        </label>
     </div>
-</div>
+    <nav class="hf-nav">
+        <div class="hf-nav-group hf-nav-top">
+            <a class="hf-nav-item" href="/user">
+                <i class="fa fa-fw fa-home"></i><span>{{ _("Home") }}</span>
+            </a>
+            <a class="hf-nav-item" href="/admin/view/statistics">
+                <i class="fa fa-fw fa-star"></i><span>{{ _("Statistics") }}</span>
+            </a>
+            <a class="hf-nav-item" href="/scoreboard/feed">
+                <i class="fa fa-fw fa-rss"></i><span>{{ _("Feed") }}</span>
+            </a>
+        </div>
+        <div class="hf-nav-group">
+            <div class="hf-nav-label">{{ _("Game Management") }}</div>
+            <a class="hf-nav-item" href="/admin/users">
+                <i class="fa fa-fw fa-group"></i><span>{{ _("Users / Teams") }}</span>
+            </a>
+            <a class="hf-nav-item" href="/admin/view/game_objects">
+                <i class="fa fa-fw fa-bullseye"></i><span>{{ _("Flags / Boxes / Corp.") }}</span>
+            </a>
+            <a class="hf-nav-item" href="/admin/view/categories">
+                <i class="fa fa-fw fa-th-large"></i><span>{{ _("Categories") }}</span>
+            </a>
+            <a class="hf-nav-item" href="/admin/view/game_levels">
+                <i class="fa fa-fw fa-level-up"></i><span>{{ _("Game Levels") }}</span>
+            </a>
+            <a class="hf-nav-item" href="/admin/view/market_objects">
+                <i class="fa fa-fw fa-shopping-cart"></i><span>{{ _("Black Market") }}</span>
+            </a>
+        </div>
+        <div class="hf-nav-group">
+            <div class="hf-nav-label">{{ _("Create") }}</div>
+            <a class="hf-nav-item" href="/admin/create/team">
+                <i class="fa fa-fw fa-group"></i><span>{{ _("New Team") }}</span>
+            </a>
+            <a class="hf-nav-item" href="/admin/create/game_level">
+                <i class="fa fa-fw fa-level-up"></i><span>{{ _("New Game Level") }}</span>
+            </a>
+            <a class="hf-nav-item" href="/admin/create/corporation">
+                <i class="fa fa-fw fa-building-o"></i><span>{{ _("New Corporation") }}</span>
+            </a>
+            <a class="hf-nav-item" href="/admin/create/category">
+                <i class="fa fa-fw fa-th-large"></i><span>{{ _("New Category") }}</span>
+            </a>
+            <a class="hf-nav-item" href="/admin/create/box">
+                <i class="fa fa-fw fa-desktop"></i><span>{{ _("New Box") }}</span>
+            </a>
+            <div class="hf-nav-sub">
+                <div class="hf-nav-sublabel">{{ _("New Flag") }}</div>
+                <a class="hf-nav-item hf-nav-item-sub" href="/admin/create/flag/static">
+                    <i class="fa fa-fw fa-flag-o"></i><span>{{ _("Static Flag") }}</span>
+                </a>
+                <a class="hf-nav-item hf-nav-item-sub" href="/admin/create/flag/regex">
+                    <i class="fa fa-fw fa-flag-o"></i><span>{{ _("Regex Flag") }}</span>
+                </a>
+                <a class="hf-nav-item hf-nav-item-sub" href="/admin/create/flag/datetime">
+                    <i class="fa fa-fw fa-flag-o"></i><span>{{ _("Datetime Flag") }}</span>
+                </a>
+                <a class="hf-nav-item hf-nav-item-sub" href="/admin/create/flag/file">
+                    <i class="fa fa-fw fa-flag-o"></i><span>{{ _("File Flag") }}</span>
+                </a>
+                <a class="hf-nav-item hf-nav-item-sub" href="/admin/create/flag/choice">
+                    <i class="fa fa-fw fa-flag-o"></i><span>{{ _("Multiple Choice Flag") }}</span>
+                </a>
+            </div>
+        </div>
+        <div class="hf-nav-group">
+            <div class="hf-nav-label">{{ _("Tools & Upgrades") }}</div>
+            {% for link in options.tool_links %}
+                {% if link.get("name") == "CyberChef" and not options.use_cyberchef %}
+                    {% continue %}
+                {% end %}
+                {% if link.get("name") and link.get("url") %}
+                    {% if not link.get("target") %}
+                        {% set link["target"] = "_blank" %}
+                    {% end %}
+                    {% set dark = link.get("name") == "CyberChef" and user.theme in ("HelloFlag", "Cyborg", "Slate") %}
+                    {% set theme = "?theme=dark" if dark else "" %}
+                    <a class="hf-nav-item" href="{{ link.get('url') }}{{ theme }}" target="{{ link.get('target') }}">
+                        <i class="fa fa-fw fa-link"></i><span>{{ link.get('name') }}</span>
+                    </a>
+                {% end %}
+            {% end %}
+            <a class="hf-nav-item" href="/admin/upgrades/source_code_market">
+                <i class="fa fa-fw fa-code"></i><span>{{ _("Source Code Market") }}</span>
+            </a>
+            <a class="hf-nav-item" href="/admin/upgrades/swat">
+                <i class="fa fa-fw fa-crosshairs"></i><span>{{ _("S.W.A.T.") }}</span>
+            </a>
+            <a class="hf-nav-item" href="/materials">
+                <i class="fa fa-fw fa-folder-open-o"></i><span>{{ _("Game Materials") }}</span>
+            </a>
+            {% if options.teams and options.team_sharing and options.use_file_sharing %}
+            <a class="hf-nav-item" href="/admin/view/fileshare">
+                <i class="fa fa-fw fa-files-o"></i><span>{{ _("Team File Share") }}</span>
+            </a>
+            {% end %}
+            {% if options.teams and options.team_sharing and options.use_pastebin %}
+            <a class="hf-nav-item" href="/admin/view/pastebin">
+                <i class="fa fa-fw fa-clipboard"></i><span>{{ _("Team PasteBin") }}</span>
+            </a>
+            {% end %}
+            {% if options.use_bots %}
+            <a class="hf-nav-item" href="/user/bots/webmonitor">
+                <i class="fa fa-fw fa-android"></i><span>{{ _("Botnet Monitor") }}</span>
+            </a>
+            {% end %}
+        </div>
+        <div class="hf-nav-group">
+            <div class="hf-nav-label">{{ _("Configuration") }}</div>
+            <a class="hf-nav-item" href="/admin/configuration">
+                <i class="fa fa-fw fa-gamepad"></i><span>{{ _("Game") }}</span>
+            </a>
+            <a class="hf-nav-item" href="/admin/homepage">
+                <i class="fa fa-fw fa-home"></i><span>{{ _("Home page") }}</span>
+            </a>
+            <a class="hf-nav-item" href="/admin/leds">
+                <i class="fa fa-fw fa-lightbulb-o"></i><span>{{ _("LEDs") }}</span>
+            </a>
+            {% if options.restrict_registration %}
+            <a class="hf-nav-item" href="/admin/regtoken/create">
+                <i class="fa fa-fw fa-unlock"></i><span>{{ _("Create RegToken") }}</span>
+            </a>
+            <a class="hf-nav-item" href="/admin/regtoken/view">
+                <i class="fa fa-fw fa-unlock-alt"></i><span>{{ _("View") }} &amp; {{ _("Delete") }}</span>
+            </a>
+            {% end %}
+        </div>
+        <div class="hf-nav-group">
+            <div class="hf-nav-label">{{ _("Backup/Restore") }}</div>
+            <a class="hf-nav-item" href="/admin/import/xml">
+                <i class="fa fa-fw fa-upload"></i><span>{{ _("Import XML") }}</span>
+            </a>
+            <a class="hf-nav-item" href="/admin/export/xml">
+                <i class="fa fa-fw fa-download"></i><span>{{ _("Export XML") }}</span>
+            </a>
+            <a class="hf-nav-item hf-nav-item-warn" href="/admin/reset">
+                <i class="fa fa-fw fa-undo"></i><span>{{ _("Reset Game") }}</span>
+            </a>
+        </div>
+        {% if scoreboard_visible %}
+        <div class="hf-nav-group">
+            <div class="hf-nav-label">{{ _("Scoreboard") }}</div>
+            <a class="hf-nav-item" href="/scoreboard">
+                <i class="fa fa-fw fa-list"></i><span>{{ _("Summary") }}</span>
+            </a>
+            <a class="hf-nav-item" href="/scoreboard/history">
+                <i class="fa fa-fw fa-calendar"></i><span>{{ _("Charts") }}</span>
+            </a>
+            {% if options.use_black_market %}
+            <a class="hf-nav-item" href="/scoreboard/wall_of_sheep">
+                <i class="fa fa-fw fa-key"></i><span>{{ _("Wall of Sheep") }}</span>
+            </a>
+            {% end %}
+            <a class="hf-nav-item" href="/teams">
+                <i class="fa fa-fw fa-users"></i><span>{% if options.teams %}{{ _("Teams") }}{% else %}{{ _("Players") }}{% end %}</span>
+            </a>
+        </div>
+        {% end %}
+        {% if len(options.chat_url) > 0 %}
+        <div class="hf-nav-group">
+            <a class="hf-nav-item" href="{{ options.chat_url }}" rel="noopener noreferrer" target="_blank">
+                <i class="fa fa-fw fa-comment"></i><span>{{ _("Chat") }}</span>
+            </a>
+        </div>
+        {% end %}
+    </nav>
+    {% include "userpanel.html" %}
+</aside>

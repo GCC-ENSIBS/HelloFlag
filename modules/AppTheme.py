@@ -28,7 +28,18 @@ from models.Theme import Theme
 
 class AppTheme(UIModule):
 
-    theme = Theme.by_name(options.default_theme)
+    _default_theme = None
+
+    @property
+    def theme(self):
+        """Resolve the default theme lazily and cache it on the class
+
+        Resolving at import time breaks the first boot after a migration adds a
+        theme: the module is imported before the row is committed.
+        """
+        if AppTheme._default_theme is None:
+            AppTheme._default_theme = Theme.by_name(options.default_theme)
+        return AppTheme._default_theme
 
     def render(self, *args, **kwargs):
         """Includes different CSS themes based on user prefs"""
@@ -41,5 +52,4 @@ class AppTheme(UIModule):
             return self.render_string(
                 "theme/theme.html", theme_files=self.handler.session["theme"]
             )
-        else:
-            return self.render_string("theme/theme.html", theme_files=self.theme)
+        return self.render_string("theme/theme.html", theme_files=self.theme or [])

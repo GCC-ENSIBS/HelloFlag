@@ -27,7 +27,6 @@ This is the main file the defines what URLs get routed to what handlers
 
 import sys
 import logging
-from builtins import str
 from os import _exit, urandom
 from os import path as os_path
 
@@ -188,6 +187,7 @@ urls = [
     (r"/admin/ajax/(user|team)", AdminAjaxUserHandler),
     (r"/admin/lock/(level|corp|user|box|flag)", AdminLockHandler),
     (r"/admin/configuration", AdminConfigurationHandler),
+    (r"/admin/homepage", AdminHomePageHandler),
     (r"/admin/leds", AdminLedsHandler),
     (r"/admin/gitstatus", AdminGitStatusHandler),
     (r"/admin/export/(.*)", AdminExportHandler),

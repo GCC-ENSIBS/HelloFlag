@@ -21,8 +21,7 @@ Created on Jun 19, 2018
 
 
 import json
-import xml.etree.cElementTree as ET
-from builtins import str
+import xml.etree.ElementTree as ET
 from uuid import uuid4
 
 from sqlalchemy import Column

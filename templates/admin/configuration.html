@@ -4,35 +4,33 @@
 
 {% block header %}
 <script src="/static/js/pages/admin/configuration.js"></script>
-<link href="/static/css/pages/admin/configuration.css" rel="stylesheet" />
 {% end %}
 
 {% block content %}
-<div class="container">
-    <form class="form-horizontal" action="/admin/configuration" method="post">
-        <div class="control-group" style="float: right; padding-top: 20px;">
-                <div class="controls">
-                    <button class="btn btn-primary" type="submit">
-                        {{ _("Update Configuration") }}
-                    </button>
-                </div>
+<form class="form-horizontal" action="/admin/configuration" method="post">
+    <div class="hf-page-head">
+        <div>
+            <h1><i class="fa fa-gear"></i> {{ _("Game Configuration") }}</h1>
+            <p class="hf-sub">
+                <strong>{{ _("Note") }}:</strong>
+                {{ _("Not all options are accessible in the web configuration.  For more, see") }}
+                <a href="https://github.com/moloch--/RootTheBox/wiki/Configuration-File-Details" target="_blank" rel="noopener noreferrer">rootthebox.cfg</a>.
+            </p>
         </div>
-        <h1>
-            <i class="fa fa-gear"></i>
-            {{ _("Game Configuration") }}
-        </h1>
-        <div style="font-style: italic;"><strong>{{ _("Note") }}:</strong> {{ _("Not all options are accessible in the web configuration.  For more, see") }} <a href="https://github.com/moloch--/RootTheBox/wiki/Configuration-File-Details" target="_blank">rootthebox.cfg</a>.</div>
-        <br />
-        {% if errors is not None and len(errors) != 0 %}
-            {% for error in errors %}
-            <div class="alert alert-error">
-                <a class="close" data-dismiss="alert" href="#">&times;</a>
-                <h4 class="alert-heading">{{ _("ERROR") }}</h4>
-                {{ error }}
-            </div>
-            {% end %}
+        <div class="hf-page-actions">
+            <button class="btn btn-primary" type="submit">{{ _("Update Configuration") }}</button>
+        </div>
+    </div>
+    {% if errors is not None and len(errors) != 0 %}
+        {% for error in errors %}
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            <h4 class="alert-heading">{{ _("ERROR") }}</h4>
+            {{ error }}
+        </div>
         {% end %}
-        <div class="well">
+    {% end %}
+    <div class="hf-card">
             {% raw xsrf_form_html() %}
             <div class="control-group">
                 <label class="control-label" for="game-name">{{ _("Game Name") }}</label>
@@ -296,7 +294,58 @@
                         </div>
                     </div>
                 </div>
+                <div class="control-group">
+                    <label class="control-label" for="use-cyberchef">{{ _("CyberChef") }}</label>
+                    <div class="controls">
+                        <input id="use-cyberchef" name="use_cyberchef" type="hidden" value="{{ str(config.use_cyberchef).lower() }}" />
+                        <div id="use-cyberchef-button" class="btn-group" data-toggle="buttons-radio">
+                            <button id="use-cyberchef-enable" type="button" class="btn btn-success">
+                                <i id="use-cyberchef-enable-icon" class="fa fa-fw fa-square-o"></i>
+                                {{ _("Enable") }}
+                            </button>
+                            <button id="use-cyberchef-disable" type="button" class="btn btn-danger">
+                                <i id="use-cyberchef-disable-icon" class="fa fa-fw fa-square-o"></i>
+                                {{ _("Disable") }}
+                            </button>
+                        </div>
+                        <span class="help-block">{{ _("Show the CyberChef tool in the player and admin menus.") }}</span>
+                    </div>
+                </div>
                 <div id="teamshare-grouping" class="control-section">
+                    <div class="control-group">
+                        <label class="control-label" for="use-file-sharing">{{ _("Team File Share") }}</label>
+                        <div class="controls">
+                            <input id="use-file-sharing" name="use_file_sharing" type="hidden" value="{{ str(config.use_file_sharing).lower() }}" />
+                            <div id="use-file-sharing-button" class="btn-group" data-toggle="buttons-radio">
+                                <button id="use-file-sharing-enable" type="button" class="btn btn-success">
+                                    <i id="use-file-sharing-enable-icon" class="fa fa-fw fa-square-o"></i>
+                                    {{ _("Enable") }}
+                                </button>
+                                <button id="use-file-sharing-disable" type="button" class="btn btn-danger">
+                                    <i id="use-file-sharing-disable-icon" class="fa fa-fw fa-square-o"></i>
+                                    {{ _("Disable") }}
+                                </button>
+                            </div>
+                            <span class="help-block">{{ _("Allow teams to upload and download shared files.") }}</span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="use-pastebin">{{ _("Team PasteBin") }}</label>
+                        <div class="controls">
+                            <input id="use-pastebin" name="use_pastebin" type="hidden" value="{{ str(config.use_pastebin).lower() }}" />
+                            <div id="use-pastebin-button" class="btn-group" data-toggle="buttons-radio">
+                                <button id="use-pastebin-enable" type="button" class="btn btn-success">
+                                    <i id="use-pastebin-enable-icon" class="fa fa-fw fa-square-o"></i>
+                                    {{ _("Enable") }}
+                                </button>
+                                <button id="use-pastebin-disable" type="button" class="btn btn-danger">
+                                    <i id="use-pastebin-disable-icon" class="fa fa-fw fa-square-o"></i>
+                                    {{ _("Disable") }}
+                                </button>
+                            </div>
+                            <span class="help-block">{{ _("Allow teams to share text snippets in game.") }}</span>
+                        </div>
+                    </div>
                     <div class="control-group">
                         <label class="control-label" for="max_pastebin_size">{{ _("Pastebin Character Limit") }}</label>
                         <div class="controls">
@@ -597,8 +646,9 @@
                         data-content="{{ _('This is the amount of money a team is paid per-bot on every interval.  The interval must be set in the .cfg file manually; the default is 5 minutes.') }}" />
                 </div>
             </div>
-            <hr />
+        <div class="form-actions">
+            <button class="btn btn-primary" type="submit">{{ _("Update Configuration") }}</button>
         </div>
-    </form>
-</div>
+    </div>
+</form>
 {% end %}

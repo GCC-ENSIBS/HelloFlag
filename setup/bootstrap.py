@@ -27,7 +27,6 @@ import os
 import random
 import string
 import sys
-from builtins import input, str
 
 from tornado.options import options
 
@@ -97,6 +96,7 @@ else:
 
 # Theme objects
 css_files = [
+    ("HelloFlag", ["helloflag.min.css"]),
     ("Bootstrap", ["bootstrap.min.css"]),
     ("Amelia", ["amelia.min.css"]),
     ("Cyborg", ["cyborg.min.css"]),

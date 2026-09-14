@@ -20,17 +20,13 @@ command line arguments it calls various components setup/start/etc.
 """
 # pylint: disable=unused-wildcard-import,unused-variable
 
-
-from __future__ import print_function
+import sys
 
 import logging
 import os
 import random
-import sys
-from builtins import input, str
 from datetime import datetime
 
-import nose
 from tornado.options import define, options
 
 from libs.ConfigHelpers import save_config, save_config_image
@@ -42,6 +38,22 @@ from setup import __version__
 def current_time():
     """Nicely formatted current time as a string"""
     return str(datetime.now()).split(" ")[1].split(".")[0]
+
+
+def docker_setup():
+    """Configure and bootstrap the container, safe to run on every boot"""
+    logging.info("Running Docker Setup")
+    if os.path.isfile(options.config):
+        options.parse_config_file(options.config)
+    # the compose environment always wins over the persisted config file
+    options_parse_environment()
+    if options.sql_dialect == "sqlite":
+        options.sql_database = "files/rootthebox.db"
+    options.admin_ips = []  # Remove admin ips due to docker 127.0.0.1 mapping
+    options.x_headers = True
+    save_config()
+    # setup() only creates what is missing, so a fresh db volume is picked up
+    setup()
 
 
 def update_database():
@@ -308,6 +320,13 @@ def generate_boxes_flag(file_path):
                 print("Flag added")
 
 
+def generate_testdata():
+    """Creates a demo game: teams, members, boxes, flags and captures"""
+    from setup.seed_testdata import seed
+
+    seed()
+
+
 def generate_category(categories):
     """Creates the categories"""
     from models import Category, dbsession
@@ -345,11 +364,13 @@ def generate_admins(admin_names):
 def tests():
     """Creates a temporary sqlite database and runs the unit tests"""
     print(INFO + "%s : Running unit tests ..." % current_time())
+    import pytest
+
     from tests import setup_database, teardown_database
 
     db_name = "test-%04s" % random.randint(0, 9999)
     setup_database(db_name)
-    nose.run(module="tests", argv=[os.getcwd() + "/tests"])
+    pytest.main([os.path.join(os.getcwd(), "tests")])
     teardown_database(db_name)
 
 
@@ -392,7 +413,13 @@ def options_parse_environment():
         # Heroku uses $PORT to define listen_port
         options.listen_port = int(os.environ.get("PORT"))
         logging.info("Environment Configuration (PORT): %d" % options.listen_port)
-    images = ["ctf_logo", "story_character", "scoreboard_right_image"]
+    images = [
+        "ctf_logo",
+        "story_character",
+        "scoreboard_right_image",
+        "game_icon",
+        "home_background",
+    ]
     for item in options.as_dict():
         config = os.environ.get(item.upper(), os.environ.get(item, None))
         if config is not None:
@@ -798,12 +825,7 @@ define(
 
 
 # Game Settings
-try:
-    # python2
-    game_type = basestring
-except NameError:
-    # python 3
-    game_type = str
+game_type = str
 
 define(
     "game_name",
@@ -835,6 +857,47 @@ define(
     group="game",
     help="the tagline displayed on the welcome page",
     type=game_type,
+)
+
+define(
+    "game_icon",
+    default="",
+    group="game",
+    help="the icon displayed next to the game name, replaces the initial",
+    type=game_type,
+)
+
+define(
+    "home_background",
+    default="",
+    group="game",
+    help="background image used on the welcome page and once logged in",
+    type=game_type,
+)
+
+define(
+    "home_markdown",
+    multiple=True,
+    default=[],
+    group="game",
+    help="markdown content displayed on the welcome page, one entry per line",
+    type=game_type,
+)
+
+define(
+    "home_show_login",
+    default=True,
+    group="game",
+    help="show the login button on the welcome page",
+    type=bool,
+)
+
+define(
+    "home_show_scoreboard",
+    default=True,
+    group="game",
+    help="show the scoreboard button on the welcome page",
+    type=bool,
 )
 
 define(
@@ -1012,6 +1075,30 @@ define(
     default=True,
     group="game",
     help="team sharing - pastebin and file share",
+    type=bool,
+)
+
+define(
+    "use_cyberchef",
+    default=False,
+    group="game",
+    help="show the CyberChef tool in the menu",
+    type=bool,
+)
+
+define(
+    "use_file_sharing",
+    default=False,
+    group="game",
+    help="enable the team file share tool",
+    type=bool,
+)
+
+define(
+    "use_pastebin",
+    default=False,
+    group="game",
+    help="enable the team pastebin tool",
     type=bool,
 )
 
@@ -1206,7 +1293,7 @@ define(
     type=int,
 )
 
-define("default_theme", default="Cyborg", group="game", help="the default css theme")
+define("default_theme", default="HelloFlag", group="game", help="the default css theme")
 
 define(
     "allow_user_to_change_theme",
@@ -1361,6 +1448,13 @@ define("config", default="files/rootthebox.cfg", help="root the box configuratio
 
 define("tests", default=False, help="runs the unit tests", type=bool)
 
+define(
+    "generate_testdata",
+    default=False,
+    help="seed demo teams, boxes, flags and captures for testing",
+    type=bool,
+)
+
 
 if __name__ == "__main__":
 
@@ -1377,22 +1471,7 @@ if __name__ == "__main__":
     if options.version:
         version()
     elif options.setup.startswith("docker"):
-        if not os.path.isfile(options.config) or (
-            options.sql_dialect == "sqlite"
-            and not os.path.isfile(options.sql_database)
-            and not os.path.isfile("%s.db" % options.sql_database)
-        ):
-            logging.info("Running Docker Setup")
-            if os.path.isfile(options.config):
-                options.parse_config_file(options.config)
-            options.sql_database = "files/rootthebox.db"
-            options.admin_ips = []  # Remove admin ips due to docker 127.0.0.1 mapping
-            options.memcached = "memcached"
-            options.x_headers = True
-            save_config()
-            setup()
-        else:
-            options.parse_config_file(options.config)
+        docker_setup()
         options.start = True
     elif options.save or not os.path.isfile(options.config):
         save_config()
@@ -1445,6 +1524,8 @@ if __name__ == "__main__":
         generate_category(options.generate_category)
     if options.generate_boxes_flag:
         generate_boxes_flag(options.generate_boxes_flag)
+    if options.generate_testdata:
+        generate_testdata()
 
     if options.admin_ips == ["[]"]:
         options.admin_ips = []  # Tornado issue?

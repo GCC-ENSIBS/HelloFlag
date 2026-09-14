@@ -1,24 +1,29 @@
-{% extends ../main.html %}
+{% extends "../main.html" %}
 
 {% block title %}{{ _("Successful Registration") }}{% end %}
 
 {% block content %}
 {% from tornado.options import options %}
-    <div class="container">
-        <br />
-        <h1>{{ _("Successfully created a new account for") }} {{ user.handle }}!</h1>
+<div class="hf-auth">
+    <div class="hf-auth-card">
+        <div class="hf-auth-head">
+            <span class="hf-brand-mark"><i class="fa fa-check"></i></span>
+            <h1>{{ _("Successfully created a new account for") }} {{ user.handle }}!</h1>
+        </div>
         {% if options.teams and user.team %}
-            <ul><h3><i class="fa fa-key"></i> {{ user.team.code }}<br>
-            {{ _("Share your team code to allow other players to join") }} {{ user.team.name }}.
-            </h3></ul>
+        <div class="hf-card">
+            <p class="hf-eyebrow">{{ _("Team Code") }}</p>
+            <p class="hf-stat-value">{{ user.team.code }}</p>
+            <p class="help-block">{{ _("Share your team code to allow other players to join") }} {{ user.team.name }}.</p>
+        </div>
         {% end %}
-        <br />
         {% if validate %}
-            <h3>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-envelope"></i>&nbsp;
-            {{ _("Please check your email for account validation") }}</h3>
+        <div class="alert alert-info">
+            <i class="fa fa-envelope"></i>&nbsp;{{ _("Please check your email for account validation") }}
+        </div>
         {% else %}
-            <a href="/login">{{ _("Click here to login") }} &raquo;</a>
+        <a class="btn btn-primary btn-block" href="/login">{{ _("Click here to login") }} &raquo;</a>
         {% end %}
-        <br />
     </div>
+</div>
 {% end %}

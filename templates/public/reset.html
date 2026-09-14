@@ -3,59 +3,57 @@
 {% block title %}{{ _("Password Reset") }}{% end %}
 
 {% block header %}
-<link href="/static/css/pages/public/login.css" rel="stylesheet">
-<script src="/static/js/pages/public/reset.js"></script>
 {% from tornado.options import options %}
 {% end %}
 
 {% block content %}
-<div class="container">
-    <form class="form-signin" action="/reset/token" method="post">
-    {% raw xsrf_form_html() %}
-        <h3 class="form-signin-heading">
-            <i class="fa fa-lock"></i>
-            {{ _("Password Reset") }}
-        </h3>
+<div class="hf-auth">
+    <div class="hf-auth-card">
+        <div class="hf-auth-head">
+            <span class="hf-brand-mark"><i class="fa fa-lock"></i></span>
+            <h1>{{ _("Password Reset") }}</h1>
+        </div>
         {% if errors is not None and len(errors) != 0 %}
             {% for error in errors %}
-                <div class="alert alert-error" >
-                    <a class="close" data-dismiss="alert" href="#">&times;</a>
-                    <h4 class="alert-heading">{{ _("Error") }}</h4>
-                    {{ error }}
-                </div>
+            <div class="alert alert-error">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <h4 class="alert-heading">{{ _("Error") }}</h4>
+                {{ error }}
+            </div>
             {% end %}
         {% end %}
         {% if info is not None and len(info) != 0 %}
             {% for item in info %}
-                <div class="alert alert-info" >
-                    <a class="close" data-dismiss="alert" href="#">&times;</a>
-                    <h4 class="alert-heading">{{ _("Information") }}</h4>
-                    {{ item }}
-                </div>
-                &nbsp;&nbsp;<a href="/login">{{ _("Click here to login") }} &raquo;</a>
-                <br />
-            {% end %}
-        {% elif errors is None %}  
-            <div>
-                <input type="hidden" name="uuid" value="{{uuid}}" />
-                <input type="hidden" name="token" value="{{token}}" />
-                <input class="input-block-level" required id="pass1" name="pass1" minlength="{{ options.min_user_password_length }}"  placeholder="{{ _('Password') }}" type="password"
-                    autocomplete="off"
-                    rel="popover"
-                    data-original-title="{{_('Password')}}"
-                    data-content="{{_('Enter a complex password of')}} {{ options.min_user_password_length }}+ {{_('Characters')}}" />
-                <input class="input-block-level" required id="pass2" name="pass2" minlength="{{ options.min_user_password_length }}"  placeholder="{{ _('Confirm Password') }}" type="password"
-                    autocomplete="off"
-                    rel="popover"
-                    data-original-title="{{_('Confirm Password')}}"
-                    data-content="{{_('Enter the same password as before')}}" />
+            <div class="alert alert-info">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <h4 class="alert-heading">{{ _("Information") }}</h4>
+                {{ item }}
             </div>
-            <button class="btn btn-primary" type="submit">
-                <i class="fa fa-sign-in"></i>
-                {{ _("Reset") }}
+            {% end %}
+            <div class="hf-auth-foot"><a href="/login">{{ _("Click here to login") }} &raquo;</a></div>
+        {% elif errors is None %}
+        <form action="/reset/token" method="post">
+            {% raw xsrf_form_html() %}
+            <input type="hidden" name="uuid" value="{{ uuid }}" />
+            <input type="hidden" name="token" value="{{ token }}" />
+            <div class="control-group">
+                <label class="control-label" for="pass1">{{ _("Password") }}</label>
+                <input required id="pass1" name="pass1" type="password" autocomplete="off"
+                    minlength="{{ options.min_user_password_length }}"
+                    placeholder="{{ _('Password') }}" />
+                <span class="help-block">{{ _("Enter a complex password of") }} {{ options.min_user_password_length }}+ {{ _("Characters") }}</span>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="pass2">{{ _("Confirm Password") }}</label>
+                <input required id="pass2" name="pass2" type="password" autocomplete="off"
+                    minlength="{{ options.min_user_password_length }}"
+                    placeholder="{{ _('Confirm Password') }}" />
+            </div>
+            <button class="btn btn-primary btn-block" type="submit">
+                <i class="fa fa-sign-in"></i>{{ _("Reset") }}
             </button>
+        </form>
         {% end %}
-    </form>
-</div> <!-- /container -->
-<br />
+    </div>
+</div>
 {% end %}
