@@ -25,13 +25,20 @@ def _fail(message):
     LAST_ERROR = "%s - %s" % (datetime.now().strftime("%H:%M:%S"), message)
     return LAST_ERROR
 
+def _headers():
+    """Returns the auth headers, empty when no api token is configured"""
+    token = getattr(options, "led_api_token", "")
+    return {"X-Api-Token": token} if token else {}
+
 def _post(endpoint, payload):
     """Posts to the led api, returns an error message or None on success"""
     url = options.led_base_api + endpoint
     try:
-        rq = post(url, json=payload, timeout=TIMEOUT)
+        rq = post(url, json=payload, headers=_headers(), timeout=TIMEOUT)
     except RequestException as error:
         return _fail(f"{url} not reachable !!! payload: {payload} | error: {error}")
+    if rq.status_code == 401:
+        return _fail(f"{url} rejected the api token !!! check the token on /admin/leds")
     if rq.status_code != 200:
         return _fail(f"{url} returned an error !!! payload: {payload} | status_code: {rq.status_code}")
     clear_last_error()
@@ -78,7 +85,7 @@ def led_round_start():
     global ROUND
     payload = {
         "duration": options.led_round_duration,
-        "round": "finale" if ROUND == 4 else ROUND,
+        "round": "finale" if ROUND >= 4 else ROUND,
         "color": options.led_color_round,
     }
     error = _post("round", payload)
