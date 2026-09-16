@@ -478,6 +478,13 @@ define(
 )
 
 define(
+    "led_api_token",
+    default="",
+    group="server",
+    help="api token sent as the X-Api-Token header, empty when the api is open",
+)
+
+define(
     "led_round_duration",
     default=30,
     group="server",

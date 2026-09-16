@@ -75,10 +75,17 @@
     <div class="hf-card">
         <div class="hf-card-head"><h3>{{ _("Settings") }}</h3></div>
         <div class="control-group">
-            <label class="control-label" for="led-base-api">{{ _("Led API URL") }}</label>
+            <label class="control-label" for="led-base-api">{{ _("API URL") }}</label>
             <div class="controls">
                 <input required id="led-base-api" type="text" name="led_base_api" value="{{ config.led_base_api }}" />
                 <span class="help-block">{{ _("Base url of the led api, it must end with a slash") }}</span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="led-api-token">{{ _("API Token") }}</label>
+            <div class="controls">
+                <input id="led-api-token" type="text" name="led_api_token" autocomplete="off" value="{{ config.led_api_token }}" />
+                <span class="help-block">{{ _("Sent as the X-Api-Token header, leave empty when the api needs no key") }}</span>
             </div>
         </div>
         <div class="control-group">
