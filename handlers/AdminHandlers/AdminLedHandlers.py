@@ -110,12 +110,6 @@ class AdminLedsHandler(BaseHandler):
         self.config.led_api_token = self.get_argument(
             "led_api_token", self.config.led_api_token
         ).strip()
-        self.config.led_round_duration = self.get_int(
-            "led_round_duration", self.config.led_round_duration
-        )
-        self.config.led_stop_duration = self.get_int(
-            "led_stop_duration", self.config.led_stop_duration
-        )
         return errors
 
     def save_tables(self):

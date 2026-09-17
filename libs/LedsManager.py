@@ -81,19 +81,30 @@ def led_own(team_name):
     return _post("box", {"table": table_id, "color": options.led_color_box})
 
 ROUND = 1
-def led_round_start():
+def led_round_start(duration=None):
+    """Starts a round, the duration being the countdown after which it stops by itself"""
     global ROUND
     payload = {
-        "duration": options.led_round_duration,
         "round": "finale" if ROUND >= 4 else ROUND,
         "color": options.led_color_round,
     }
+    # without a countdown the round runs until led_stop(), the led api needs no duration for that
+    if duration:
+        payload["duration"] = duration
     error = _post("round", payload)
     ROUND+=1
     return error
 
 def led_stop():
-    return _post("forceColor", {"duration": options.led_stop_duration, "color": options.led_color_stop})
+    """Ends the round, the stop color being held until the next round"""
+    return _post("stop", {"color": options.led_color_stop})
+
+def led_countdown(seconds=None):
+    """Arms the countdown set in the admin interface, or cancels it without ending the round"""
+    payload = {}
+    if seconds:
+        payload["duration"] = seconds
+    return _post("countdown", payload)
 
 def led_test(table_id):
     """Lights up a single table, used by the admin leds page"""
