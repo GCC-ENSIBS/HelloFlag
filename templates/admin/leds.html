@@ -88,20 +88,6 @@
                 <span class="help-block">{{ _("Sent as the X-Api-Token header, leave empty when the api needs no key") }}</span>
             </div>
         </div>
-        <div class="control-group">
-            <label class="control-label" for="led-round-duration">{{ _("Round Duration") }}</label>
-            <div class="controls">
-                <input required id="led-round-duration" type="number" min="1" name="led_round_duration" value="{{ config.led_round_duration }}" />
-                <span class="help-block">{{ _("Duration in seconds sent to the led api when a round starts") }}</span>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="led-stop-duration">{{ _("Stop Duration") }}</label>
-            <div class="controls">
-                <input required id="led-stop-duration" type="number" min="1" name="led_stop_duration" value="{{ config.led_stop_duration }}" />
-                <span class="help-block">{{ _("Duration in seconds of the color displayed when the game stops") }}</span>
-            </div>
-        </div>
         <div class="hf-field-row">
             <div class="control-group">
                 <label class="control-label" for="led-color-flag">{{ _("Flag Color") }}</label>

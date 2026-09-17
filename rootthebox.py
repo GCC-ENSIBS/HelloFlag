@@ -485,20 +485,6 @@ define(
 )
 
 define(
-    "led_round_duration",
-    default=30,
-    group="server",
-    help="duration in seconds of a led round",
-)
-
-define(
-    "led_stop_duration",
-    default=10,
-    group="server",
-    help="duration in seconds of the end of game led color",
-)
-
-define(
     "led_color_flag",
     default="#00ff00",
     group="server",

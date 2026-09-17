@@ -44,6 +44,7 @@ from libs.ConfigHelpers import (
 )
 from libs.ConsoleColors import *
 from libs.EventManager import EventManager
+from libs.LedsManager import led_countdown
 from libs.Scoreboard import Scoreboard, score_bots
 from libs.SecurityDecorators import *
 from libs.StringCoding import decode, encode
@@ -140,6 +141,8 @@ class AdminGameHandler(BaseHandler):
                 self.application.settings["countdown_timer"] = False
                 self.application.settings["stop_timer"] = False
                 self.application.settings["hide_scoreboard"] = False
+                # clearing the timer only drops the deadline, the round keeps running
+                led_countdown()
                 if self.application.settings["temp_global_notifications"] is not None:
                     options.global_notification = self.application.settings[
                         "temp_global_notifications"
@@ -149,6 +152,8 @@ class AdminGameHandler(BaseHandler):
             elif set_timer:
                 diff = 60 * int(float(set_timer))
                 self.application.settings["countdown_timer"] = time.time() + diff
+                # the led api ends the round by itself once the countdown elapses
+                led_countdown(diff)
                 self.application.settings[
                     "temp_global_notifications"
                 ] = options.global_notification
